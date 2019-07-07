@@ -13,16 +13,99 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\3rdparty">
+      <UniqueIdentifier>{a634c455-8cce-4109-b66a-a06bacae2ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3rdparty\v8pp">
+      <UniqueIdentifier>{40ab253e-920c-4468-acff-a2ee38d136b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rdparty">
+      <UniqueIdentifier>{9eef6829-5253-4a24-a405-954adc6057e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rdparty\v8pp">
+      <UniqueIdentifier>{b012ae6d-ff1c-4d62-99f1-3fd6756e2be8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="matrix.cc">
+    <ClCompile Include="js\shell.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\v8pp\class.cpp">
+      <Filter>Source Files\3rdparty\v8pp</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\v8pp\context.cpp">
+      <Filter>Source Files\3rdparty\v8pp</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\v8pp\convert.cpp">
+      <Filter>Source Files\3rdparty\v8pp</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\v8pp\json.cpp">
+      <Filter>Source Files\3rdparty\v8pp</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\v8pp\throw_ex.cpp">
+      <Filter>Source Files\3rdparty\v8pp</Filter>
+    </ClCompile>
+    <ClCompile Include="js\test-mvvm.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="js\shell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\class.ipp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\config.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\context.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\convert.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\factory.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\function.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\json.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\json.ipp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\module.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\object.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\persistent.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\property.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\ptr_traits.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\throw_ex.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\throw_ex.ipp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\v8pp\utility.hpp">
+      <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

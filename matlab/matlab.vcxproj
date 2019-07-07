@@ -72,7 +72,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)/3rdparty;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -126,11 +128,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="3rdparty\v8pp\class.cpp" />
+    <ClCompile Include="3rdparty\v8pp\context.cpp" />
+    <ClCompile Include="3rdparty\v8pp\convert.cpp" />
+    <ClCompile Include="3rdparty\v8pp\json.cpp" />
+    <ClCompile Include="3rdparty\v8pp\throw_ex.cpp" />
+    <ClCompile Include="js\shell.cc" />
+    <ClCompile Include="js\test-mvvm.cc" />
     <ClCompile Include="main.cc" />
-    <ClCompile Include="matrix.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3rdparty\v8pp\class.ipp" />
+    <ClInclude Include="3rdparty\v8pp\config.hpp" />
+    <ClInclude Include="3rdparty\v8pp\context.hpp" />
+    <ClInclude Include="3rdparty\v8pp\convert.hpp" />
+    <ClInclude Include="3rdparty\v8pp\factory.hpp" />
+    <ClInclude Include="3rdparty\v8pp\function.hpp" />
+    <ClInclude Include="3rdparty\v8pp\json.hpp" />
+    <ClInclude Include="3rdparty\v8pp\json.ipp" />
+    <ClInclude Include="3rdparty\v8pp\module.hpp" />
+    <ClInclude Include="3rdparty\v8pp\object.hpp" />
+    <ClInclude Include="3rdparty\v8pp\persistent.hpp" />
+    <ClInclude Include="3rdparty\v8pp\property.hpp" />
+    <ClInclude Include="3rdparty\v8pp\ptr_traits.hpp" />
+    <ClInclude Include="3rdparty\v8pp\throw_ex.hpp" />
+    <ClInclude Include="3rdparty\v8pp\throw_ex.ipp" />
+    <ClInclude Include="3rdparty\v8pp\utility.hpp" />
+    <ClInclude Include="js\shell.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
