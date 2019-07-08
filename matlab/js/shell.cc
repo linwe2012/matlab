@@ -6,9 +6,10 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-
-
 using namespace v8;
+
+//   U T I L S
+//-----------------------------------
 #define v8str(__str__) String::NewFromUtf8(d.context->GetIsolate(), __str__, NewStringType::kNormal).ToLocalChecked()
 
 void DefaultExceptionReporter(std::ostream& os, Isolate* isolate, TryCatch* try_catch);
@@ -18,7 +19,8 @@ const char* ToCString(const v8::String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
 }
 
-
+//   D A T A   &   I T 'S    F R I E N D S
+//--------------------------------------------
 struct V8Shell::Data {
 	
 	Data(Isolate* isolate);
@@ -47,6 +49,15 @@ struct V8Shell::Data {
 
 	std::string cwd;
 
+	Local<Object> shell_object;
+
+	std::vector<Local<Context>> context_stack;
+
+	Local<ObjectTemplate> global_object_template;
+
+
+	// functions exposed to v8
+	//--------------------------
 	fs::path GetPath(fs::path p) {
 		return fs::path(cwd) / fs::relative(p, cwd);
 	}
@@ -59,10 +70,7 @@ struct V8Shell::Data {
 	
 	void CreateGlobal();
 
-	std::vector<Local<Context>> context_stack;
-	Local<Object> global_object;
-	bool is_entered = false;
-	Local<ObjectTemplate> global_object_template;
+	void SetExit() { close = true; }
 };
 
 V8Shell::Data::Data(Isolate* isolate)
@@ -75,20 +83,6 @@ V8Shell::Data::Data(Isolate* isolate)
 
 }
 
-struct Test {
-	Test(int x) : xx(x) {}
-	int xx;
-
-};
-
-struct Test3 {
-	Test3() : yy (1234) {}
-	int yy;
-};
-
-void Test2(const FunctionCallbackInfo<Value>& args) {
-	args.GetReturnValue().Set(0);
-}
 
 void V8Shell::Data::CreateGlobal() {
 	global_object_template = v8::ObjectTemplate::New(isolate);
@@ -103,11 +97,10 @@ void V8Shell::Data::CreateGlobal() {
 }
 
 
-
 void V8Shell::Data::RegisterShell()
 {
 	auto& d = *this;
-	
+
 	v8pp::class_<V8Shell::Data> shell_class(isolate);
 	shell_class
 		// values
@@ -118,16 +111,24 @@ void V8Shell::Data::RegisterShell()
 		.set("readtxt", &V8Shell::Data::ReadFileTxt)
 		.set("exists", &V8Shell::Data::FileExist)
 		.set("cd", &V8Shell::Data::ChangeDirectory)
+		.set("exit", &V8Shell::Data::SetExit)
 		;
 	auto shell = v8pp::class_<V8Shell::Data>::import_external(isolate, this);
+	//auto global = isolate->GetCurrentContext()->Global();
+	//auto res = global->Set(context, v8str("shell"), shell);
+
+	
+	shell_object = shell;
+	CreateGlobal();
 	auto global = isolate->GetCurrentContext()->Global();
-	auto res = global->Set(context, v8str("shell"), shell);
+	auto res = global->Set(context_stack.back(), v8str("shell"), shell);
 
 	if (res.IsNothing() || !res.ToChecked()) {
 		(*error) << "Shell cannot be loaded" << std::endl;
 	}
-	CreateGlobal();
+
 }
+
 
 Local<String> V8Shell::Data::ReadFileTxt(const char* name) {
 	auto& d = *this;
@@ -144,14 +145,17 @@ Local<String> V8Shell::Data::ReadFileTxt(const char* name) {
 	return v8str(str.c_str());
 }
 
+
 void V8Shell::Data::ChangeDirectory(const char* str) {
 	fs::path path = cwd;
 	cwd = fs::weakly_canonical(path / str).string();
 }
 
+
 Local<Boolean> V8Shell::Data::FileExist(const char* str) {
 	return Boolean::New(isolate, fs::exists(GetPath(str)));
 }
+
 
 V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_name)
 {
@@ -186,6 +190,7 @@ V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_nam
 	d.cwd = fs::current_path().string();
 	d.RegisterShell();
 }
+
 
 bool V8Shell::Execute(const std::string& str, std::function<void(v8::Local<Value>)> callback)
 {
@@ -226,20 +231,24 @@ bool V8Shell::Execute(const std::string& str, std::function<void(v8::Local<Value
 	return true;
 }
 
+
 void V8Shell::SetUncaughtExceptionHandler(UncaughtExceptionHandler handler)
 {
 	data_->handler = handler;
 }
+
 
 bool V8Shell::Closed()
 {
 	return data_->close;
 }
 
+
 v8::Isolate* V8Shell::GetIsolate()
 {
 	return data_->isolate;
 }
+
 
 void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 {
@@ -253,7 +262,16 @@ void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 	}
 
 	d.context_stack.push_back(Context::New(d.isolate, nullptr, d.global_object_template));
+
+	auto global = d.isolate->GetCurrentContext()->Global();
+	auto res = global->Set(d.context_stack.back(), v8str("shell"), d.shell_object);
+
+	if (res.IsNothing() || !res.ToChecked()) {
+		(*d.error) << "Shell cannot be loaded" << std::endl;
+	}
+
 }
+
 
 void V8Shell::ReportException(TryCatch* try_catch)
 {
@@ -296,6 +314,7 @@ void DefaultExceptionReporter(std::ostream& os, Isolate* isolate, TryCatch* try_
 	}
 }
 
+
 V8Exception::V8Exception(Isolate* isolate, TryCatch* try_catch)
 {
 	HandleScope handle_scope(isolate);
@@ -307,7 +326,6 @@ V8Exception::V8Exception(Isolate* isolate, TryCatch* try_catch)
 	if (message.IsEmpty()) {
 		return;
 	}
-
 
 	this->has_detail = true;
 	String::Utf8Value v8filename(isolate,

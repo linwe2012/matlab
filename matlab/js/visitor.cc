@@ -36,7 +36,4 @@ void JSVisitor::Dispatch(v8::Isolate* i, Local<v8::Value> v)
 
 	LIST(VISIT);
 
-
-
-
 }

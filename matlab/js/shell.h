@@ -17,6 +17,7 @@ struct V8Exception {
 	int line_number = -1;
 	std::string stack_trace;
 
+	// parse V8 Exception
 	V8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch);
 };
 
@@ -28,8 +29,10 @@ public:
 
 	V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_name = "(shell)");
 
+	// execute a complete js string
 	bool Execute(const std::string& str, ResultCallback callback = ResultCallback());
 
+	// set js exception handler
 	void SetUncaughtExceptionHandler(UncaughtExceptionHandler handler);
 
 	bool Closed();
@@ -46,7 +49,7 @@ private:
 
 	void ReportException(v8::TryCatch* try_catch);
 
-	struct Data; // serve as firewall between v8 and us
+	struct Data; // serve as firewall against frequent changing internal implementation
 	Data* data_;
 };
 

@@ -145,6 +145,7 @@
     <ClCompile Include="js\test-mvvm.cc" />
     <ClCompile Include="js\visitor.cc" />
     <ClCompile Include="main.cc" />
+    <ClCompile Include="view\gui-api.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -57,6 +57,9 @@
     <ClCompile Include="js\visitor.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="view\gui-api.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

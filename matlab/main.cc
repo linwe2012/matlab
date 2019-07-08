@@ -9,6 +9,10 @@
 #include "js/shell.h"
 #include "js/matrix.h"
 
+#include <filesystem>
+#include <fstream>
+namespace fs = std::filesystem;
+
 bool CheckEscapeLine(std::string& str);
 
 
@@ -17,6 +21,18 @@ int main(int argc, char* argv[])
 
 	V8Shell shell(argc, argv, std::cerr);
 	DefineJSMatrix(&shell);
+
+
+	//if (fs::exists("__init__.js")) {
+	//	std::ifstream ifs("__init__.js");
+	//
+	//	std::string str = std::string(
+	//		std::istreambuf_iterator<char>(ifs),
+	//		std::istreambuf_iterator<char>()
+	//	);
+	//
+	//	shell.Execute(str);
+	//}
 
 	while (!shell.Closed())
 	{
