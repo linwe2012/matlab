@@ -17,6 +17,7 @@ V(Proxy)\
 V(Date)\
 V(Function)\
 V(RegExp)\
+V(Object)
 
 
 #define VISIT(t) \

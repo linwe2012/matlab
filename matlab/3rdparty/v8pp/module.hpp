@@ -140,6 +140,9 @@ public:
 	{
 		return obj_->NewInstance(isolate_->GetCurrentContext()).ToLocalChecked();
 	}
+	v8::Local<v8::ObjectTemplate> object_template() {
+		return obj_;
+	}
 
 private:
 	template<typename Variable>

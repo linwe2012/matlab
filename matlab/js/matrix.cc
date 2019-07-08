@@ -28,10 +28,8 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("resize", &Matrix::v8_resize);
 
 
-
+	
 }
-
-
 
 
 

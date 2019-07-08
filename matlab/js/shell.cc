@@ -18,7 +18,9 @@ const char* ToCString(const v8::String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
 }
 
+
 struct V8Shell::Data {
+	
 	Data(Isolate* isolate);
 	void RegisterShell();
 
@@ -49,29 +51,18 @@ struct V8Shell::Data {
 		return fs::path(cwd) / fs::relative(p, cwd);
 	}
 
-	Local<String> ReadFileTxt(const char* name) {
-		auto& d = *this;
-		std::ifstream ifs(GetPath(name));
+	Local<String> ReadFileTxt(const char* name);
 
-		if (!ifs.good() || !ifs.is_open()) {
-			isolate->ThrowException(Exception::Error(v8str("Unable to open file")));
-			return v8str("");
-		}
-		
-		std::string str((std::istreambuf_iterator<char>(ifs)),
-			std::istreambuf_iterator<char>());
+	void ChangeDirectory(const char* str);
 
-		return v8str(str.c_str());
-	}
+	Local<Boolean> FileExist(const char* str);
+	
+	void CreateGlobal();
 
-	void ChangeDirectory(const char* str) {
-		fs::path path = cwd;
-		cwd = fs::weakly_canonical(path / str).string();
-	}
-
-	Local<Boolean> FileExist(const char* str) {
-		return Boolean::New(isolate, fs::exists(GetPath(str)));
-	}
+	std::vector<Local<Context>> context_stack;
+	Local<Object> global_object;
+	bool is_entered = false;
+	Local<ObjectTemplate> global_object_template;
 };
 
 V8Shell::Data::Data(Isolate* isolate)
@@ -84,10 +75,39 @@ V8Shell::Data::Data(Isolate* isolate)
 
 }
 
+struct Test {
+	Test(int x) : xx(x) {}
+	int xx;
+
+};
+
+struct Test3 {
+	Test3() : yy (1234) {}
+	int yy;
+};
+
+void Test2(const FunctionCallbackInfo<Value>& args) {
+	args.GetReturnValue().Set(0);
+}
+
+void V8Shell::Data::CreateGlobal() {
+	global_object_template = v8::ObjectTemplate::New(isolate);
+
+	auto& d = *this;
+	
+	context_stack.push_back(
+		Context::New(isolate, nullptr, global_object_template)
+	);
+
+	context_stack.back()->Enter();
+}
+
+
 
 void V8Shell::Data::RegisterShell()
 {
 	auto& d = *this;
+	
 	v8pp::class_<V8Shell::Data> shell_class(isolate);
 	shell_class
 		// values
@@ -106,6 +126,31 @@ void V8Shell::Data::RegisterShell()
 	if (res.IsNothing() || !res.ToChecked()) {
 		(*error) << "Shell cannot be loaded" << std::endl;
 	}
+	CreateGlobal();
+}
+
+Local<String> V8Shell::Data::ReadFileTxt(const char* name) {
+	auto& d = *this;
+	std::ifstream ifs(GetPath(name));
+
+	if (!ifs.good() || !ifs.is_open()) {
+		isolate->ThrowException(Exception::Error(v8str("Unable to open file")));
+		return v8str("");
+	}
+
+	std::string str((std::istreambuf_iterator<char>(ifs)),
+		std::istreambuf_iterator<char>());
+
+	return v8str(str.c_str());
+}
+
+void V8Shell::Data::ChangeDirectory(const char* str) {
+	fs::path path = cwd;
+	cwd = fs::weakly_canonical(path / str).string();
+}
+
+Local<Boolean> V8Shell::Data::FileExist(const char* str) {
+	return Boolean::New(isolate, fs::exists(GetPath(str)));
 }
 
 V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_name)
@@ -146,7 +191,7 @@ bool V8Shell::Execute(const std::string& str, std::function<void(v8::Local<Value
 {
 	auto& d = *data_;
 	
-	Context::Scope context_scope(d.context);
+	Context::Scope context_scope(d.context_stack.back());
 	HandleScope handle_scope(d.isolate);
 	TryCatch try_catch(d.isolate);
 	ScriptOrigin origin(d.name);
@@ -194,6 +239,20 @@ bool V8Shell::Closed()
 v8::Isolate* V8Shell::GetIsolate()
 {
 	return data_->isolate;
+}
+
+void V8Shell::RegisterClasses(const std::vector<Class>& classes)
+{
+	auto& d = *data_;
+
+	d.context_stack.back()->Exit();
+	for (auto c : classes) {
+		d.global_object_template->Set(
+			d.isolate, c.name.c_str(), c.ctor
+		);
+	}
+
+	d.context_stack.push_back(Context::New(d.isolate, nullptr, d.global_object_template));
 }
 
 void V8Shell::ReportException(TryCatch* try_catch)

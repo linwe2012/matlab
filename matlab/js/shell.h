@@ -36,6 +36,12 @@ public:
 
 	v8::Isolate* GetIsolate();
 
+	struct Class {
+		std::string name;
+		v8::Local<v8::FunctionTemplate> ctor;
+	};
+	void RegisterClasses(const std::vector<Class>& classes);
+
 private:
 
 	void ReportException(v8::TryCatch* try_catch);
@@ -43,3 +49,4 @@ private:
 	struct Data; // serve as firewall between v8 and us
 	Data* data_;
 };
+
