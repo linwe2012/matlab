@@ -1,6 +1,7 @@
 #include "shell.h"
 #include "opencv2/core/core.hpp"
 #include <iostream>
+using namespace v8;
 
 class Matrix {
 public:
@@ -24,13 +25,13 @@ void DefineJSMatrix(V8Shell* shell) {
 
 	v8pp::class_<Matrix> matrix_class(isolate);
 	matrix_class
-		.set("resize", Matrix::v8_resize);
+		.set("resize", &Matrix::v8_resize);
 
 
 
 }
 
-using namespace v8;
+
 
 
 
@@ -47,7 +48,7 @@ void Matrix::v8_resize(const v8::FunctionCallbackInfo<v8::Value>& args)
 
 	if (args[0]->IsArray()) {
 		dims = std::move(
-			v8pp::from_v8<std::vector<int>>(args.GetIsolate(), args[0], 0)
+			v8pp::from_v8<std::vector<int>>(args.GetIsolate(), args[0])
 		);
 	}
 	else {

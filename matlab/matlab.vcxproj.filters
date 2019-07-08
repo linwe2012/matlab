@@ -51,6 +51,12 @@
     <ClCompile Include="js\test-mvvm.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="js\matrix.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="js\visitor.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -106,6 +112,15 @@
     </ClInclude>
     <ClInclude Include="3rdparty\v8pp\utility.hpp">
       <Filter>Header Files\3rdparty\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="js\matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="view\pretty-print.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="js\visitor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

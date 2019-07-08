@@ -20,7 +20,7 @@ V(RegExp)\
 
 
 #define VISIT(t) \
-if(v->Is##t) {\
+if(v->Is##t()) {\
 	Visit(Local<t>::Cast(v));\
 	return;\
 }
