@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include <assert.h>
+#include <filesystem>
+namespace fs = std::filesystem;
 
-#include "v8pp/module.hpp"
-#include "v8pp/class.hpp"
+
 
 using namespace v8;
-#define v8str(__str__) String::NewFromUtf8(d.context->GetIsolate(), __str__, NewStringType::kNormal).ToLocalChecked();
+#define v8str(__str__) String::NewFromUtf8(d.context->GetIsolate(), __str__, NewStringType::kNormal).ToLocalChecked()
 
 void DefaultExceptionReporter(std::ostream& os, Isolate* isolate, TryCatch* try_catch);
 
@@ -29,6 +30,7 @@ struct V8Shell::Data {
 
 	bool report_exception = true;
 	bool print_result = true;
+	bool close = false;
 
 	UncaughtExceptionHandler handler;
 
@@ -40,6 +42,36 @@ struct V8Shell::Data {
 	Context::Scope context_scope;
 
 	V8Shell* super = nullptr;
+
+	std::string cwd;
+
+	fs::path GetPath(fs::path p) {
+		return fs::path(cwd) / fs::relative(p, cwd);
+	}
+
+	Local<String> ReadFileTxt(const char* name) {
+		auto& d = *this;
+		std::ifstream ifs(GetPath(name));
+
+		if (!ifs.good() || !ifs.is_open()) {
+			isolate->ThrowException(Exception::Error(v8str("Unable to open file")));
+			return v8str("");
+		}
+		
+		std::string str((std::istreambuf_iterator<char>(ifs)),
+			std::istreambuf_iterator<char>());
+
+		return v8str(str.c_str());
+	}
+
+	void ChangeDirectory(const char* str) {
+		fs::path path = cwd;
+		cwd = fs::weakly_canonical(path / str).string();
+	}
+
+	Local<Boolean> FileExist(const char* str) {
+		return Boolean::New(isolate, fs::exists(GetPath(str)));
+	}
 };
 
 V8Shell::Data::Data(Isolate* isolate)
@@ -52,14 +84,28 @@ V8Shell::Data::Data(Isolate* isolate)
 
 }
 
+
 void V8Shell::Data::RegisterShell()
 {
+	auto& d = *this;
+	v8pp::class_<V8Shell::Data> shell_class(isolate);
+	shell_class
+		// values
+		.set("report_exception", &V8Shell::Data::report_exception)
+		.set("print_result", &V8Shell::Data::print_result)
+		.set("cwd", &V8Shell::Data::cwd)
+		// functions
+		.set("readtxt", &V8Shell::Data::ReadFileTxt)
+		.set("exists", &V8Shell::Data::FileExist)
+		.set("cd", &V8Shell::Data::ChangeDirectory)
+		;
+	auto shell = v8pp::class_<V8Shell::Data>::import_external(isolate, this);
+	auto global = isolate->GetCurrentContext()->Global();
+	auto res = global->Set(context, v8str("shell"), shell);
 
-	Persistent<ObjectTemplate> class_template;
-
-	Local<ObjectTemplate> shell_class = ObjectTemplate::New(isolate);
-	shell_class->SetInternalFieldCount(1);
-
+	if (res.IsNothing() || !res.ToChecked()) {
+		(*error) << "Shell cannot be loaded" << std::endl;
+	}
 }
 
 V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_name)
@@ -92,6 +138,8 @@ V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_nam
 	d.name = v8str(shell_name);
 	d.platform = std::move(platform);
 	d.super = this;
+	d.cwd = fs::current_path().string();
+	d.RegisterShell();
 }
 
 bool V8Shell::Execute(const std::string& str, std::function<void(v8::Local<Value>)> callback)
@@ -133,9 +181,19 @@ bool V8Shell::Execute(const std::string& str, std::function<void(v8::Local<Value
 	return true;
 }
 
+void V8Shell::SetUncaughtExceptionHandler(UncaughtExceptionHandler handler)
+{
+	data_->handler = handler;
+}
+
 bool V8Shell::Closed()
 {
-	return false;
+	return data_->close;
+}
+
+v8::Isolate* V8Shell::GetIsolate()
+{
+	return data_->isolate;
 }
 
 void V8Shell::ReportException(TryCatch* try_catch)

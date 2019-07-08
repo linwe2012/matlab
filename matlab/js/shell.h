@@ -1,5 +1,7 @@
 #pragma once
 #include "v8.h"
+#include "v8pp/module.hpp"
+#include "v8pp/class.hpp"
 
 #include <string>
 #include <functional>
@@ -8,7 +10,7 @@ struct V8Exception {
 	std::string exception;
 
 	bool has_detail;
-	std::string filename = nullptr;
+	std::string filename;
 	std::string sourceline;
 	int sourceline_begin;
 	int sourceline_end;
@@ -31,6 +33,8 @@ public:
 	void SetUncaughtExceptionHandler(UncaughtExceptionHandler handler);
 
 	bool Closed();
+
+	v8::Isolate* GetIsolate();
 
 private:
 
