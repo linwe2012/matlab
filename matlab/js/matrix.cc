@@ -13,13 +13,20 @@ public:
 	void v8_rotate(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_togray(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_tobin(const v8::FunctionCallbackInfo<v8::Value>& args);
-	
+	void v8_equalizeHist(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void v8_capcha(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void v8_face(const v8::FunctionCallbackInfo<v8::Value>& args);
+
 	void resize(const std::vector<int>& dims);
 	void openFile(const std::string& fileName);
 	void showimg();
 	void rotate(const int degree);
 	void togray();
 	void tobin();
+	void equalizeHist();
+	void linear(double alpha, int beta);
+	void face();
 
 	cv::Mat matrix;
 };
@@ -45,7 +52,10 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("showimg", &Matrix::showimg)
 		.set("rotate", &Matrix::rotate)
 		.set("togray", &Matrix::togray)
-		.set("tobin", &Matrix::tobin);
+		.set("tobin", &Matrix::tobin)
+		.set("equalizeHist", &Matrix::equalizeHist)
+		.set("linear", &Matrix::linear)
+		.set("face", &Matrix::face);
 
 	mylib.set("Matrix", matrix_class);
 
@@ -132,6 +142,30 @@ void Matrix::v8_tobin(const v8::FunctionCallbackInfo<v8::Value>& args)
 	tobin();
 }
 
+void Matrix::v8_equalizeHist(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	equalizeHist();
+}
+
+void Matrix::v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	int num_args = args.Length();
+	if (num_args < 2) {
+		return ArgError(args, "Expected at least one argument");
+	}
+
+	double alpha = v8pp::from_v8<double>(args.GetIsolate(), args[0]);
+	int beta = v8pp::from_v8<int>(args.GetIsolate(), args[1]);
+	
+	linear(alpha, beta);
+}
+
+void Matrix::v8_face(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	face();
+}
+
+
 void Matrix::resize(const std::vector<int>& dims)
 {
 	std::cerr << "resize called: [";
@@ -144,13 +178,14 @@ void Matrix::resize(const std::vector<int>& dims)
 void Matrix::openFile(const std::string& fileName)
 {
 	matrix = cv::imread(fileName);
-	std::cout << fileName << "loaded." << std::endl;
+	std::cout << fileName << " loaded." << std::endl;
 }
 
 void Matrix::showimg()
 {
 	//std::cout << matrix << std::endl;
 	cv::imwrite("output.png", matrix);
+	std::cout << "Output file is output.png." << std::endl;
 	//cv::imshow("Pic", matrix);
 }
 
@@ -167,12 +202,15 @@ void Matrix::rotate(const int degree)
 	rot.at<double>(1, 2) += bbox.height / 2.0 - temp->rows / 2.0;
 
 	cv::warpAffine(*temp, matrix, rot, bbox.size());
+
+	std::cout << "Done: rotate " << degree << " degrees." << std::endl;
 }
 
 void Matrix::togray()
 {
 	cv::Mat temp = matrix.clone();
 	cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
+	std::cout << "Done: convert to gray picture." << std::endl;
 }
 
 void Matrix::tobin()
@@ -180,4 +218,43 @@ void Matrix::tobin()
 	togray();
 	cv::Mat temp = matrix.clone();
 	cv::threshold(temp, matrix, 15, 100.0, 8);
+
+	std::cout << "Done: convert to binary picture." << std::endl;
+}
+
+void Matrix::equalizeHist()
+{
+	cv::Mat RGB[3];
+	cv::Mat temp = matrix.clone();
+
+	cv::split(temp, RGB);
+	for (int i = 0; i < 3; ++i) {
+		cv::equalizeHist(RGB[i], RGB[i]);
+	}
+	cv::merge(RGB, 3, matrix);
+
+	std::cout << "Done: equalize." << std::endl;
+}
+
+void Matrix::linear(double alpha, int beta)
+{
+	cv::Mat temp = matrix.clone();
+	temp.convertTo(matrix, -1, alpha, beta);
+}
+
+void Matrix::face()
+{
+	cv::Mat temp = matrix.clone();
+	cv::Mat gray;
+	cv::cvtColor(temp, gray, cv::COLOR_BGR2GRAY);
+	cv::equalizeHist(gray, gray);
+
+	cv::CascadeClassifier cascade;
+	cascade.load("haarcascade_frontalface_alt.xml");
+	std::vector<cv::Rect> faces;
+	cascade.detectMultiScale(gray, faces, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+
+	for (auto it = faces.begin(); it != faces.end(); ++it) {
+		cv::rectangle(matrix, *it, cv::Scalar(0, 0, 255), 3, 4, 0);
+	}
 }
