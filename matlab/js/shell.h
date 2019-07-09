@@ -27,8 +27,11 @@ public:
 	using UncaughtExceptionHandler = std::function<void(v8::Isolate* isolate, v8::TryCatch* try_catch)>;
 	using ResultCallback = std::function<void(v8::Local<v8::Value>)>;
 
-	V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_name = "(shell)");
+	V8Shell(int argc, char* argv[], 
+		std::ostream& os, 
+		const char* shell_name = "(shell)");
 
+	
 	// execute a complete js string
 	bool Execute(const std::string& str, ResultCallback callback = ResultCallback());
 

@@ -19,12 +19,15 @@ const char* ToCString(const v8::String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
 }
 
+void ReloadInitFile(V8Shell* shell);
+
 //   D A T A   &   I T 'S    F R I E N D S
 //--------------------------------------------
 struct V8Shell::Data {
 	
 	Data(Isolate* isolate);
 	void RegisterShell();
+	
 
 	Isolate* isolate = nullptr;
 	
@@ -71,6 +74,9 @@ struct V8Shell::Data {
 	void CreateGlobal();
 
 	void SetExit() { close = true; }
+
+	// returns arrays of file names
+	void IterateFiles(const FunctionCallbackInfo<Value>& vals);
 };
 
 V8Shell::Data::Data(Isolate* isolate)
@@ -96,6 +102,70 @@ void V8Shell::Data::CreateGlobal() {
 	context_stack.back()->Enter();
 }
 
+void V8Shell::Data::IterateFiles(const FunctionCallbackInfo<Value>& args)
+{
+	Local<Array> arr = Array::New(isolate);
+	auto& d = *this;
+	std::vector<std::string> paths;
+	auto lmbdAdd = [&](Local<Value> v) {
+		paths.push_back(
+			std::move(
+				v8pp::from_v8<std::string>(isolate, v)
+			)
+		);
+	};
+
+	int len = args.Length();
+
+	if (args.Length() == 0) {
+		paths.push_back("./");
+	}
+	else {
+		if (args[0]->IsString()) {
+			for (int i = 0; i < len; ++i) {
+				lmbdAdd(args[i]);
+			}
+		}
+		else if(args[0]->IsArray()){
+			
+			paths = std::move(
+				v8pp::from_v8<std::vector<std::string>>(isolate, args[0])
+			);
+		}
+		else {
+			isolate->ThrowException(
+				Exception::ReferenceError(
+					v8str("Expected string or array of strings")
+				)
+			);
+			args.GetReturnValue().Set(arr);
+			return;
+		}
+	}
+
+	
+	uint32_t cnt = 0;
+	std::vector<std::string> native;
+	for (auto& path : paths) {
+		if (!fs::exists(path)) {
+			//TODO: Log warning
+			continue;
+		}
+
+		if (!fs::is_directory(path)) {
+			//TODO: Log warning
+			continue;
+		}
+
+		for (auto file : fs::directory_iterator(path)) {
+			arr->Set(d.isolate->GetCurrentContext(), cnt, v8str(file.path().string().c_str()));
+			++cnt;
+		}
+	}
+	args.GetReturnValue().Set(arr);
+	return;
+}
+
 
 void V8Shell::Data::RegisterShell()
 {
@@ -112,6 +182,7 @@ void V8Shell::Data::RegisterShell()
 		.set("exists", &V8Shell::Data::FileExist)
 		.set("cd", &V8Shell::Data::ChangeDirectory)
 		.set("exit", &V8Shell::Data::SetExit)
+		.set("listfiles", &V8Shell::Data::IterateFiles)
 		;
 	auto shell = v8pp::class_<V8Shell::Data>::import_external(isolate, this);
 	//auto global = isolate->GetCurrentContext()->Global();
@@ -189,6 +260,7 @@ V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_nam
 	d.super = this;
 	d.cwd = fs::current_path().string();
 	d.RegisterShell();
+	ReloadInitFile(this);
 }
 
 
@@ -269,7 +341,7 @@ void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 	if (res.IsNothing() || !res.ToChecked()) {
 		(*d.error) << "Shell cannot be loaded" << std::endl;
 	}
-
+	ReloadInitFile(this);
 }
 
 
@@ -311,6 +383,20 @@ void DefaultExceptionReporter(std::ostream& os, Isolate* isolate, TryCatch* try_
 		if (parsed.stack_trace.size()) {
 			os << "[stack]: " << parsed.stack_trace << std::endl;
 		}
+	}
+}
+
+void ReloadInitFile(V8Shell* shell)
+{
+	if (fs::exists("__init__.js")) {
+		std::ifstream ifs("__init__.js");
+
+		std::string str = std::string(
+			std::istreambuf_iterator<char>(ifs),
+			std::istreambuf_iterator<char>()
+		);
+
+		shell->Execute(str);
 	}
 }
 
