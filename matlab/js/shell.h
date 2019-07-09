@@ -48,6 +48,10 @@ public:
 	};
 	void RegisterClasses(const std::vector<Class>& classes);
 
+	std::string GetCwd();
+
+	static V8Shell* GetShell(v8::Isolate*);
+
 private:
 
 	void ReportException(v8::TryCatch* try_catch);

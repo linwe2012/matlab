@@ -25,6 +25,7 @@ void ReloadInitFile(V8Shell* shell);
 //--------------------------------------------
 struct V8Shell::Data {
 	
+	static std::map<Isolate*, V8Shell*> shell_map;
 	Data(Isolate* isolate);
 	void RegisterShell();
 	
@@ -52,6 +53,8 @@ struct V8Shell::Data {
 
 	std::string cwd;
 
+	std::vector<std::string> cwd_stack;
+
 	Local<Object> shell_object;
 
 	std::vector<Local<Context>> context_stack;
@@ -75,9 +78,33 @@ struct V8Shell::Data {
 
 	void SetExit() { close = true; }
 
+	void PushCwd() { cwd_stack.push_back(cwd); }
+
+	void PopCwd(Isolate* isolate) {
+		auto& d = *this;
+		if (cwd_stack.size() == 0) {
+			isolate->ThrowException(
+				Exception::ReferenceError(v8str("Stack is empty"))
+			);
+			return;
+		}
+
+		cwd = cwd_stack.back();
+		cwd_stack.pop_back();
+	}
+
 	// returns arrays of file names
 	void IterateFiles(const FunctionCallbackInfo<Value>& vals);
+
+	std::string GetDirectory(const char* f) {
+		return GetPath(f).parent_path().string();
+	}
+
+	std::string Extension(const char* f) {
+		return fs::path(f).extension().string();
+	}
 };
+std::map<Isolate*, V8Shell*> V8Shell::Data::shell_map;
 
 V8Shell::Data::Data(Isolate* isolate)
 	:   isolate_scope(isolate)
@@ -183,6 +210,10 @@ void V8Shell::Data::RegisterShell()
 		.set("cd", &V8Shell::Data::ChangeDirectory)
 		.set("exit", &V8Shell::Data::SetExit)
 		.set("listfiles", &V8Shell::Data::IterateFiles)
+		.set("pushCwd", &V8Shell::Data::PushCwd)
+		.set("popCwd", &V8Shell::Data::PopCwd)
+		.set("getDir", &V8Shell::Data::GetDirectory)
+		.set("getExt", &V8Shell::Data::Extension)
 		;
 	auto shell = v8pp::class_<V8Shell::Data>::import_external(isolate, this);
 	//auto global = isolate->GetCurrentContext()->Global();
@@ -261,6 +292,8 @@ V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_nam
 	d.cwd = fs::current_path().string();
 	d.RegisterShell();
 	ReloadInitFile(this);
+
+	d.shell_map.insert({ d.isolate, this });
 }
 
 
@@ -343,6 +376,20 @@ void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 		(*d.error) << "Shell cannot be loaded" << std::endl;
 	}
 	ReloadInitFile(this);
+}
+
+std::string V8Shell::GetCwd()
+{
+	return data_->cwd;
+}
+
+V8Shell* V8Shell::GetShell(v8::Isolate* i)
+{
+	auto itr = Data::shell_map.find(i);
+	if (itr == Data::shell_map.end()) {
+		return nullptr;
+	}
+	return itr->second;
 }
 
 

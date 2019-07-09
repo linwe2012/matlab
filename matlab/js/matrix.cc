@@ -1,18 +1,22 @@
 #include "shell.h"
 #include "opencv2/opencv.hpp"
 #include <iostream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 using namespace v8;
 
 class Matrix {
 public:
 	Matrix() {}
-	Matrix(cv::Mat m) 
-		:matrix(m)
+
+	Matrix(cv::Mat m, V8Shell* shell)
+		:matrix(m), shell_(shell)
 	{}
 
 	void v8_resize(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_openFile(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_showimg(const v8::FunctionCallbackInfo<v8::Value>& args); // Output pic, to file `output.png`. Just for test.
+	void v8_read(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void v8_write(const v8::FunctionCallbackInfo<v8::Value>& args); // Output pic, to file `output.png`. Just for test.
 	void v8_rotate(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_togray(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_tobin(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -21,11 +25,14 @@ public:
 	void v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_face(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void return_this(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		args.GetReturnValue().Set(args.This());
+	}
 
 	void resize(const std::vector<int>& dims);
-	void openFile(const std::string& fileName);
-	void write(const char* filename);
-	void rotate(const int degree);
+	void openFile(Isolate* isolate, const char* filename);
+	void write(Isolate* isolate, const char* filename);
+	void rotate(const double degree);
 	void togray();
 	void tobin();
 	void equalizeHist();
@@ -33,8 +40,18 @@ public:
 	void face();
 
 
-	cv::Mat matrix;
 	
+	cv::Mat matrix;
+private:
+	bool GetShell(Isolate* isolate) {
+		if (shell_ != nullptr) {
+			return true;
+		}
+		shell_ = V8Shell::GetShell(isolate);
+		return shell_;
+	}
+
+	V8Shell* shell_ = nullptr;
 };
 
 static v8pp::class_<Matrix> *gMatrixClass = nullptr;
@@ -58,19 +75,19 @@ void DefineJSMatrix(V8Shell* shell) {
 	// v8pp::class_<Matrix> matrix_class(isolate);
 	// matrix_class
 	(*gMatrixClass)
-		.ctor<>()
+		.ctor <> ()
 		// values
 		.set("matrix", &Matrix::matrix)
 		// functions
 		.set("resize", &Matrix::v8_resize)
-		.set("read", &Matrix::openFile)
-		.set("write", &Matrix::write)
-		.set("rotate", &Matrix::rotate)
-		.set("togray", &Matrix::togray)
-		.set("tobin", &Matrix::tobin)
-		.set("equalizeHist", &Matrix::equalizeHist)
-		.set("linear", &Matrix::linear)
-		.set("face", &Matrix::face)
+		.set("read", &Matrix::v8_read)
+		.set("write", &Matrix::v8_write)
+		.set("rotate", &Matrix::v8_rotate)
+		.set("togray", &Matrix::v8_togray)
+		.set("tobin", &Matrix::v8_tobin)
+		.set("equalizeHist", &Matrix::v8_equalizeHist)
+		.set("linear", &Matrix::v8_linear)
+		.set("face", &Matrix::v8_face)
 		.set("clone", &Matrix::v8_clone)
 		;
 
@@ -111,10 +128,11 @@ void Matrix::v8_resize(const v8::FunctionCallbackInfo<v8::Value>& args)
 	}
 	
 	resize(dims);
+	return_this(args);
 }
 
 
-void Matrix::v8_openFile(const v8::FunctionCallbackInfo<v8::Value>& args)
+void Matrix::v8_read(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	int num_args = args.Length();
 
@@ -122,11 +140,11 @@ void Matrix::v8_openFile(const v8::FunctionCallbackInfo<v8::Value>& args)
 		return ArgError(args, "Expected at least one argument");
 	}
 
-	std::string fileName = v8pp::from_v8<std::string>(args.GetIsolate(), args[0]);
-	openFile(fileName);
+	openFile(args.GetIsolate(), v8pp::from_v8<const char*>(args.GetIsolate(), args[0]));
+	return_this(args);
 }
 
-void Matrix::v8_showimg(const v8::FunctionCallbackInfo<v8::Value>& args)
+void Matrix::v8_write(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	int num_args = args.Length();
 
@@ -134,7 +152,12 @@ void Matrix::v8_showimg(const v8::FunctionCallbackInfo<v8::Value>& args)
 		return ArgError(args, "Expected at least one argument");
 	}
 
-	//write();
+	if (!args[0]->IsString()) {
+		return ArgError(args, "Expected string as filename");
+	}
+
+	write(args.GetIsolate(), v8pp::from_v8<const char*>(args.GetIsolate(), args[0]));
+	return_this(args);
 }
 
 void Matrix::v8_rotate(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -145,23 +168,31 @@ void Matrix::v8_rotate(const v8::FunctionCallbackInfo<v8::Value>& args)
 		return ArgError(args, "Expected at least one argument");
 	}
 
-	int deg = v8pp::from_v8<int>(args.GetIsolate(), args[0]);
+	double deg = v8pp::from_v8<double>(args.GetIsolate(), args[0], INT_MAX);
+	if (deg == INT_MAX) {
+		return ArgError(args, "Expected int");
+	}
+
 	rotate(deg);
+	return_this(args);
 }
 
 void Matrix::v8_togray(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	togray();
+	return_this(args);
 }
 
 void Matrix::v8_tobin(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	tobin();
+	return_this(args);
 }
 
 void Matrix::v8_equalizeHist(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	equalizeHist();
+	return_this(args);
 }
 
 void Matrix::v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -175,11 +206,13 @@ void Matrix::v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args)
 	int beta = v8pp::from_v8<int>(args.GetIsolate(), args[1]);
 	
 	linear(alpha, beta);
+	return_this(args);
 }
 
 void Matrix::v8_face(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	face();
+	return_this(args);
 }
 
 void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -187,7 +220,8 @@ void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
 	Isolate* isolate = args.GetIsolate();
 	args.GetReturnValue().Set(
 		(*gMatrixClass).create_object(
-			isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone()
+			isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone(),
+			shell_
 		)
 	);
 }
@@ -202,21 +236,33 @@ void Matrix::resize(const std::vector<int>& dims)
 	std::cout << "]" << std::endl;
 }
 
-void Matrix::openFile(const std::string& fileName)
+void Matrix::openFile(Isolate* isolate, const char* filename)
 {
-	matrix = cv::imread(fileName);
-	std::cout << fileName << " loaded." << std::endl;
+	if (!GetShell(isolate)) {
+		//TODO: Log error
+		return;
+	}
+	fs::path p(shell_->GetCwd());
+	p /= filename;
+	matrix = cv::imread(p.string().c_str());
+	// std::cout << fileName << " loaded." << std::endl;
 }
 
-void Matrix::write(const char* filename)
+void Matrix::write(Isolate* isolate, const char* filename)
 {
+	if (!GetShell(isolate)) {
+		//TODO: Log
+		return;
+	}
 	//std::cout << matrix << std::endl;
-	cv::imwrite(filename, matrix);
-	std::cout << "Output file is output.png." << std::endl;
+	fs::path p(shell_->GetCwd());
+	p /= filename;
+	cv::imwrite(p.string().c_str(), matrix);
+	// std::cout << "Output file is output.png." << std::endl;
 	//cv::imshow("Pic", matrix);
 }
 
-void Matrix::rotate(const int degree)
+void Matrix::rotate(const double degree)
 {
 	cv::Mat* temp = new cv::Mat(matrix);
 
