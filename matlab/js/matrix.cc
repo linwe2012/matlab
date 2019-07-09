@@ -6,6 +6,9 @@ using namespace v8;
 class Matrix {
 public:
 	Matrix() {}
+	Matrix(cv::Mat m) 
+		:matrix(m)
+	{}
 
 	void v8_resize(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_openFile(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -17,10 +20,11 @@ public:
 	void v8_capcha(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_face(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 	void resize(const std::vector<int>& dims);
 	void openFile(const std::string& fileName);
-	void showimg();
+	void write(const char* filename);
 	void rotate(const int degree);
 	void togray();
 	void tobin();
@@ -28,8 +32,13 @@ public:
 	void linear(double alpha, int beta);
 	void face();
 
+
 	cv::Mat matrix;
+	
 };
+
+static v8pp::class_<Matrix> *gMatrixClass = nullptr;
+
 
 template<int N>
 void ArgError(const v8::FunctionCallbackInfo<v8::Value>& args, char const(&str)[N]) {
@@ -40,28 +49,36 @@ void ArgError(const v8::FunctionCallbackInfo<v8::Value>& args, char const(&str)[
 }
 
 void DefineJSMatrix(V8Shell* shell) {
+	if (gMatrixClass != nullptr) {
+		//TODO: Log warning
+		return;
+	}
 	auto isolate = shell->GetIsolate();
-	v8pp::module mylib(isolate);
-
-	v8pp::class_<Matrix> matrix_class(isolate);
-	matrix_class
+	gMatrixClass = new v8pp::class_<Matrix>(isolate);
+	// v8pp::class_<Matrix> matrix_class(isolate);
+	// matrix_class
+	(*gMatrixClass)
 		.ctor<>()
-		.set("resize", &Matrix::v8_resize)
+		// values
 		.set("matrix", &Matrix::matrix)
-		.set("openFile", &Matrix::openFile)
-		.set("showimg", &Matrix::showimg)
+		// functions
+		.set("resize", &Matrix::v8_resize)
+		.set("read", &Matrix::openFile)
+		.set("write", &Matrix::write)
 		.set("rotate", &Matrix::rotate)
 		.set("togray", &Matrix::togray)
 		.set("tobin", &Matrix::tobin)
 		.set("equalizeHist", &Matrix::equalizeHist)
 		.set("linear", &Matrix::linear)
-		.set("face", &Matrix::face);
+		.set("face", &Matrix::face)
+		.set("clone", &Matrix::v8_clone)
+		;
 
-	mylib.set("Matrix", matrix_class);
-
-	isolate->GetCurrentContext()->Global()->Set(
-		v8::String::NewFromUtf8(isolate, "mylib"), mylib.new_instance());
-	
+	shell->RegisterClasses(
+		{
+			{ "Matrix", (*gMatrixClass).js_function_template() }
+		}
+	);
 }
 
 
@@ -117,7 +134,7 @@ void Matrix::v8_showimg(const v8::FunctionCallbackInfo<v8::Value>& args)
 		return ArgError(args, "Expected at least one argument");
 	}
 
-	showimg();
+	//write();
 }
 
 void Matrix::v8_rotate(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -165,6 +182,16 @@ void Matrix::v8_face(const v8::FunctionCallbackInfo<v8::Value>& args)
 	face();
 }
 
+void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	args.GetReturnValue().Set(
+		(*gMatrixClass).create_object(
+			isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone()
+		)
+	);
+}
+
 
 void Matrix::resize(const std::vector<int>& dims)
 {
@@ -181,10 +208,10 @@ void Matrix::openFile(const std::string& fileName)
 	std::cout << fileName << " loaded." << std::endl;
 }
 
-void Matrix::showimg()
+void Matrix::write(const char* filename)
 {
 	//std::cout << matrix << std::endl;
-	cv::imwrite("output.png", matrix);
+	cv::imwrite(filename, matrix);
 	std::cout << "Output file is output.png." << std::endl;
 	//cv::imshow("Pic", matrix);
 }

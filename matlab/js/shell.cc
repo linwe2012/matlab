@@ -334,6 +334,7 @@ void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 	}
 
 	d.context_stack.push_back(Context::New(d.isolate, nullptr, d.global_object_template));
+	d.context_stack.back()->Enter();
 
 	auto global = d.isolate->GetCurrentContext()->Global();
 	auto res = global->Set(d.context_stack.back(), v8str("shell"), d.shell_object);
