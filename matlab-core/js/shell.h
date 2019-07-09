@@ -52,6 +52,8 @@ public:
 
 	static V8Shell* GetShell(v8::Isolate*);
 
+	~V8Shell();
+
 private:
 
 	void ReportException(v8::TryCatch* try_catch);

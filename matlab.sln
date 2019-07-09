@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matlab-cli", "matlab-cli\ma
 		{E45833AB-05E3-4E31-AC28-11BE85D65C60} = {E45833AB-05E3-4E31-AC28-11BE85D65C60}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unit-test", "unit-test\unit-test.vcxproj", "{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -45,6 +47,14 @@ Global
 		{E2FB3E4F-5463-4E10-BB9C-3ED5E3CC7018}.Release|x64.Build.0 = Release|x64
 		{E2FB3E4F-5463-4E10-BB9C-3ED5E3CC7018}.Release|x86.ActiveCfg = Release|Win32
 		{E2FB3E4F-5463-4E10-BB9C-3ED5E3CC7018}.Release|x86.Build.0 = Release|Win32
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Debug|x64.ActiveCfg = Debug|x64
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Debug|x64.Build.0 = Debug|x64
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Debug|x86.ActiveCfg = Debug|Win32
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Debug|x86.Build.0 = Debug|Win32
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Release|x64.ActiveCfg = Release|x64
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Release|x64.Build.0 = Release|x64
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Release|x86.ActiveCfg = Release|Win32
+		{2FFD916A-8E7E-40B9-B2B2-4BF1A8A17F4E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
