@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(MSBuildThisFileDirectory)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)/3rdparty/include;$(MSBuildThisFileDirectory)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,9 +147,11 @@
     <ClCompile Include="view\gui-api.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="js\convert-utils.h" />
     <ClInclude Include="js\matrix.h" />
     <ClInclude Include="js\shell.h" />
     <ClInclude Include="js\visitor.h" />
+    <ClInclude Include="matlab-experimental.h" />
     <ClInclude Include="matlab.h" />
     <ClInclude Include="view\pretty-print.h" />
   </ItemGroup>

@@ -44,6 +44,12 @@
     <ClInclude Include="js\visitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="js\convert-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matlab-experimental.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
