@@ -12,16 +12,10 @@ MatlabGui::MatlabGui(QWidget *parent)
 	connect(ui->rotate, SIGNAL(valueChanged(int)), this, SLOT(onPicChanges()));
 	connect(ui->width, SIGNAL(valueChanged(int)), this, SLOT(onPicChanges()));
 	connect(ui->height, SIGNAL(valueChanged(int)), this, SLOT(onPicChanges()));
-
-	connect(ui->face, SIGNAL(toggled(int)), this, SLOT(onPicChanges()));
-	connect(ui->equalize, SIGNAL(toggled(int)), this, SLOT(onPicChanges()));
-	connect(ui->bin, SIGNAL(toggled(int)), this, SLOT(onPicNew()));
-	connect(ui->gray, SIGNAL(toggled(int)), this, SLOT(onPicNew()));
-
-	//QButtonGroup* pbuttonGroup = new QButtonGroup(this);
-	//pbuttonGroup->setExclusive(true);
-	//pbuttonGroup->addButton(ui->bin);
-	//pbuttonGroup->addButton(ui->gray);
+	connect(ui->face, SIGNAL(stateChanged(int)), this, SLOT(onPicChanges()));
+	connect(ui->equalize, SIGNAL(stateChanged(int)), this, SLOT(onPicChanges()));
+	connect(ui->bin, SIGNAL(stateChanged(int)), this, SLOT(onPicNew()));
+	connect(ui->gray, SIGNAL(stateChanged(int)), this, SLOT(onPicNew()));
 
 
 	auto scene1 = new QGraphicsScene(this);
@@ -34,7 +28,7 @@ MatlabGui::MatlabGui(QWidget *parent)
 	ui->view2->setScene(scene2);
 	auto pix2 = new QPixmap("test-out/contrast.png");
 	scene2->addPixmap(*pix2);
-	ui->view2->show();	
+	ui->view2->show();
 }
 
 

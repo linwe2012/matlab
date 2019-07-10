@@ -3,8 +3,4 @@ public:
 	void AddButton();
 
 	void DrawImage();
-
-	
-
-
 };

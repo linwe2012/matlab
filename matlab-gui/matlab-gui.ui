@@ -292,6 +292,9 @@
     <property name="text">
      <string>灰度</string>
     </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="bin">
     <property name="enabled">
@@ -316,6 +319,9 @@
     </property>
     <property name="text">
      <string>二值化</string>
+    </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

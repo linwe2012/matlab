@@ -130,12 +130,14 @@ public:
         gray->setObjectName(QString::fromUtf8("gray"));
         gray->setGeometry(QRect(850, 480, 121, 21));
         gray->setFont(font);
+        gray->setAutoExclusive(false);
         bin = new QCheckBox(centralWidget);
         bin->setObjectName(QString::fromUtf8("bin"));
         bin->setEnabled(true);
         bin->setGeometry(QRect(850, 510, 121, 21));
         bin->setFont(font);
         bin->setMouseTracking(true);
+        bin->setAutoExclusive(false);
         MatlabGuiClass->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(MatlabGuiClass);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
