@@ -1,61 +1,8 @@
-#include "shell.h"
-#include "opencv2/opencv.hpp"
-#include <iostream>
-#include <filesystem>
+#include "matrix.h"
 
 namespace fs = std::filesystem;
-using namespace v8;
-
-class Matrix {
-public:
-	Matrix() {}
-
-	Matrix(cv::Mat m, V8Shell* shell)
-		:matrix(m), shell_(shell)
-	{}
-
-	void v8_resize(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_read(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_write(const v8::FunctionCallbackInfo<v8::Value>& args); // Output pic, to file `output.png`. Just for test.
-	void v8_rotate(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_togray(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_tobin(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_equalizeHist(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_capcha(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_linear(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_face(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args);
-	void return_this(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		args.GetReturnValue().Set(args.This());
-	}
-
-	void resize(const std::vector<int>& dims);
-	void openFile(Isolate* isolate, const char* filename);
-	void write(Isolate* isolate, const char* filename);
-	void rotate(const double degree);
-	void togray();
-	void tobin();
-	void equalizeHist();
-	void linear(double alpha, int beta);
-	void face();
-
-
-	
-	cv::Mat matrix;
-private:
-	bool GetShell(Isolate* isolate) {
-		if (shell_ != nullptr) {
-			return true;
-		}
-		shell_ = V8Shell::GetShell(isolate);
-		return shell_;
-	}
-
-	V8Shell* shell_ = nullptr;
-};
 
 static v8pp::class_<Matrix> *gMatrixClass = nullptr;
-
 
 template<int N>
 void ArgError(const v8::FunctionCallbackInfo<v8::Value>& args, char const(&str)[N]) {
@@ -97,7 +44,6 @@ void DefineJSMatrix(V8Shell* shell) {
 		}
 	);
 }
-
 
 
 
@@ -229,11 +175,16 @@ void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
 
 void Matrix::resize(const std::vector<int>& dims)
 {
+	/*
 	std::cerr << "resize called: [";
 	for (auto d : dims) {
 		std::cout << d << ", ";
 	}
 	std::cout << "]" << std::endl;
+	*/
+
+	cv::Mat temp = matrix.clone();
+	cv::resize(temp, matrix, cv::Size(temp.cols * dims.at(0), temp.rows * dims.at(1)), 0, 0, cv::INTER_LINEAR);
 }
 
 void Matrix::openFile(Isolate* isolate, const char* filename)
@@ -264,7 +215,10 @@ void Matrix::write(Isolate* isolate, const char* filename)
 
 void Matrix::rotate(const double degree)
 {
+	/*
 	cv::Mat* temp = new cv::Mat(matrix);
+	auto oldrows = temp->rows;
+	auto oldcols = temp->cols;
 
 	cv::Point2f center((temp->cols - 1) / 2.0, (temp->rows - 1) / 2.0);
 	cv::Mat rot = cv::getRotationMatrix2D(center, degree, 1.0);
@@ -276,6 +230,35 @@ void Matrix::rotate(const double degree)
 
 	cv::warpAffine(*temp, matrix, rot, bbox.size());
 
+	cv::Mat beforeResize = matrix.clone();
+	cv::resize(beforeResize, matrix, cv::Size(oldcols, oldrows), 0, 0, cv::INTER_LINEAR);
+
+	std::cout << "Done: rotate " << degree << " degrees." << std::endl;
+	*/
+
+	
+	cv::Mat moveImage(matrix.rows, matrix.cols, CV_8UC3, cv::Scalar(0, 0, 0));
+	cv::Point2f center(matrix.cols/2, matrix.rows/2);
+	cv::Mat M = getRotationMatrix2D(center, degree, 1);
+	cv::warpAffine(matrix, moveImage, M, cv::Size(matrix.cols, matrix.rows));
+	cv::circle(moveImage, center, 2, cv::Scalar(255,0,0));
+	matrix = moveImage;
+	
+
+	/*
+	cv::Mat outimg;
+	int rotatedWidth = ceil(matrix.rows * fabs(sin(degree * CV_PI / 180)) + matrix.cols * fabs(cos(degree * CV_PI / 180)));
+	int rotatedHeight = ceil(matrix.cols * fabs(sin(degree * CV_PI / 180)) + matrix.rows * fabs(cos(degree * CV_PI / 180)));
+
+	cv::Point2f center(matrix.cols / 2, matrix.rows / 2);
+	cv::Mat rotateMatrix = getRotationMatrix2D(center, 45, 1.0);
+
+	rotateMatrix.at<double>(0, 2) += (rotatedWidth - matrix.cols) / 2;
+	rotateMatrix.at<double>(1, 2) += (rotatedHeight - matrix.rows) / 2;
+	
+	cv::warpAffine(matrix, outimg, rotateMatrix, cv::Size(rotatedWidth, rotatedHeight), cv::INTER_LINEAR, 0, cv::Scalar(255, 255, 255));
+	matrix = outimg;
+	*/
 	std::cout << "Done: rotate " << degree << " degrees." << std::endl;
 }
 
