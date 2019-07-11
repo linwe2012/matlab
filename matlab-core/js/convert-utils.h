@@ -27,7 +27,7 @@ namespace detail {
 	}
 	
 	template<typename... Args, std::size_t... Is>
-	std::tuple<Args...> GetProperties(v8::Isolate* isolate, v8::Local<v8::Object> object, std::array<const char*, sizeof...(Args)>, std::index_sequence<Is...>) {
+	std::tuple<Args...> GetProperties(v8::Isolate* isolate, v8::Local<v8::Object> object, std::array<const char*, sizeof...(Args)> arr, std::index_sequence<Is...>) {
 		return {
 			GetPropertiesPass<Args>(isolate, object, arr[Is])...
 		};

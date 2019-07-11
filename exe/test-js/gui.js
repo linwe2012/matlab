@@ -11,11 +11,8 @@ function CheckAns() {
 var bin = new gui.Button(
     {
         text: 'Binerize',
-        icon: "????",
-        // click callback
         onclick: ()=> {
             if(!CheckAns()) return;
-
             ans.tobin();
         }
     }

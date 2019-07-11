@@ -30,8 +30,14 @@
       <Extensions>ui</Extensions>
       <ParseFiles>true</ParseFiles>
     </Filter>
+    <Filter Include="Header Files\v8pp">
+      <UniqueIdentifier>{7235bf74-24ba-45cc-9e61-0b8882eb89b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="widgets\button.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
     <QtMoc Include="matlab-gui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -48,5 +54,71 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="widgets\widgets-registery.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\widgets.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\call_from_v8.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\call_v8.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\class.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\class.ipp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\config.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\context.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\convert.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\factory.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\function.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\json.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\json.ipp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\module.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\object.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\persistent.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\property.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\ptr_traits.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.ipp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp">
+      <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

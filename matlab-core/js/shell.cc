@@ -366,6 +366,16 @@ void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 	}
 }
 
+void V8Shell::RegisterGlobals(const std::vector<Global>& globals)
+{
+	auto& d = *data_;
+	for (auto g : globals) {
+		d.context_stack.back()->Global()->Set(
+			v8str(g.name.c_str()), g.obj
+		);
+	}
+}
+
 std::string V8Shell::GetCwd()
 {
 	return data_->cwd;

@@ -46,7 +46,13 @@ public:
 		std::string name;
 		v8::Local<v8::FunctionTemplate> ctor;
 	};
+	struct Global {
+		std::string name;
+		v8::Local<v8::Object> obj;
+	};
 	void RegisterClasses(const std::vector<Class>& classes);
+
+	void RegisterGlobals(const std::vector<Global>& globals);
 
 	std::string GetCwd();
 
