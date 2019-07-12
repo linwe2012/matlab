@@ -6,6 +6,7 @@ btn_bin = new gui.Button(
         onclick: ()=> {
             if(!CheckAns()) return;
             ans.tobin();
+            gui.display(ans)
         }
     }
 );
@@ -17,6 +18,7 @@ btn_gray = new gui.Button(
         onclick: ()=> {
             if(!CheckAns()) return;
             ans.togray();
+            gui.display(ans)
         }
     }
 );
