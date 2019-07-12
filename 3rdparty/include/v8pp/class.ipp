@@ -223,7 +223,40 @@ V8PP_IMPL v8::Local<v8::Object> object_registry<Traits>::wrap_object(v8::Functio
 		//assert(false && "create not allowed");
 		throw std::runtime_error(class_name() + " has no constructor");
 	}
-	return wrap_object(ctor_(args), true);
+
+	bool call_dtor = true;
+
+	v8::EscapableHandleScope scope(isolate_);
+
+	v8::Local<v8::Context> context = isolate_->GetCurrentContext();
+	v8::Local<v8::Object> obj = class_function_template()
+		->GetFunction(context).ToLocalChecked()->NewInstance(context).ToLocalChecked();
+
+	args.GetReturnValue().Set(obj);
+	pointer_type object = ctor_(args);
+	auto it = objects_.find(object);
+	if (it != objects_.end())
+	{
+		//assert(false && "duplicate object");
+		throw std::runtime_error(class_name()
+			+ " duplicate object " + pointer_str(Traits::pointer_id(object)));
+	}
+
+	obj->SetAlignedPointerInInternalField(0, Traits::pointer_id(object));
+	obj->SetAlignedPointerInInternalField(1, this);
+
+	v8::Global<v8::Object> pobj(isolate_, obj);
+	pobj.SetWeak(this, [](v8::WeakCallbackInfo<object_registry> const& data)
+	{
+		object_id object = data.GetInternalField(0);
+		object_registry* this_ = static_cast<object_registry*>(data.GetInternalField(1));
+		this_->remove_object(object);
+	}, v8::WeakCallbackType::kInternalFields);
+	objects_.emplace(object, wrapped_object{ std::move(pobj), call_dtor });
+
+	return scope.Escape(obj);
+
+	// return wrap_object(ctor_(args), true);
 }
 
 template<typename Traits>

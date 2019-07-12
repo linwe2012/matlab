@@ -1,2 +1,13 @@
+Rotate-Slide:
+  type: slide
+  name: rotate_slide
+
 Rotate:
-  Slide: 
+  type: button
+  text: Rotate
+  click: this.ans.rotate(this.rotate_slide.val)
+
+Save:
+  type: button
+  text: Save
+  click: this.ans.write(this.)

@@ -46,11 +46,19 @@ public:
 		std::string name;
 		v8::Local<v8::FunctionTemplate> ctor;
 	};
+	struct Global {
+		std::string name;
+		v8::Local<v8::Object> obj;
+	};
 	void RegisterClasses(const std::vector<Class>& classes);
+
+	void RegisterGlobals(const std::vector<Global>& globals);
 
 	std::string GetCwd();
 
 	static V8Shell* GetShell(v8::Isolate*);
+
+	~V8Shell();
 
 private:
 

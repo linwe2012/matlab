@@ -215,10 +215,10 @@ void V8Shell::Data::RegisterShell()
 		.set("getDir", &V8Shell::Data::GetDirectory)
 		.set("getExt", &V8Shell::Data::Extension)
 		;
-	auto shell = v8pp::class_<V8Shell::Data>::import_external(isolate, this);
+	auto shell = v8pp::class_<V8Shell::Data>::reference_external(isolate, this);
 	//auto global = isolate->GetCurrentContext()->Global();
 	//auto res = global->Set(context, v8str("shell"), shell);
-
+	
 	
 	shell_object = shell;
 	CreateGlobal();
@@ -358,24 +358,22 @@ v8::Isolate* V8Shell::GetIsolate()
 void V8Shell::RegisterClasses(const std::vector<Class>& classes)
 {
 	auto& d = *data_;
-
-	d.context_stack.back()->Exit();
+	
 	for (auto c : classes) {
-		d.global_object_template->Set(
-			d.isolate, c.name.c_str(), c.ctor
+		d.context_stack.back()->Global()->Set(
+			v8str(c.name.c_str()), c.ctor->GetFunction(d.context_stack.back()).ToLocalChecked()
 		);
 	}
+}
 
-	d.context_stack.push_back(Context::New(d.isolate, nullptr, d.global_object_template));
-	d.context_stack.back()->Enter();
-
-	auto global = d.isolate->GetCurrentContext()->Global();
-	auto res = global->Set(d.context_stack.back(), v8str("shell"), d.shell_object);
-
-	if (res.IsNothing() || !res.ToChecked()) {
-		(*d.error) << "Shell cannot be loaded" << std::endl;
+void V8Shell::RegisterGlobals(const std::vector<Global>& globals)
+{
+	auto& d = *data_;
+	for (auto g : globals) {
+		d.context_stack.back()->Global()->Set(
+			v8str(g.name.c_str()), g.obj
+		);
 	}
-	ReloadInitFile(this);
 }
 
 std::string V8Shell::GetCwd()
@@ -390,6 +388,18 @@ V8Shell* V8Shell::GetShell(v8::Isolate* i)
 		return nullptr;
 	}
 	return itr->second;
+}
+
+V8Shell::~V8Shell()
+{
+	auto& d = *data_;
+
+	
+	while (d.context_stack.size()) {
+		d.context_stack.back()->Exit();
+		d.context_stack.pop_back();
+	}
+	v8pp::class_<V8Shell::Data>::unreference_external(d.isolate, data_);
 }
 
 
