@@ -8,6 +8,9 @@
     <ClCompile Include="widgets\widgets.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\button.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -119,6 +122,12 @@
     </ClInclude>
     <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp">
       <Filter>Header Files\v8pp</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\widget-helper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\registry.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

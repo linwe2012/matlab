@@ -122,6 +122,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matlab-gui.cpp" />
+    <ClCompile Include="widgets\button.cc" />
     <ClCompile Include="widgets\widgets.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +162,8 @@
     <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.hpp" />
     <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.ipp" />
     <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp" />
+    <ClInclude Include="widgets\registry.h" />
+    <ClInclude Include="widgets\widget-helper.h" />
     <ClInclude Include="widgets\widgets-registery.h" />
     <ClInclude Include="widgets\widgets.h" />
   </ItemGroup>

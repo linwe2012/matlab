@@ -11,12 +11,8 @@ public:
 	Local<Object> js_self_;
 
 	Button(const FunctionCallbackInfo<Value>& args);
-	
-	static void New(const FunctionCallbackInfo<Value>& args);
 
 	static void Init(Local<Object> mod, V8Shell* shell);
-
-	Button();
 
 	Q_OBJECT
 
