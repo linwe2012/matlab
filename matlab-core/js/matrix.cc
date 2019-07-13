@@ -264,16 +264,22 @@ void Matrix::rotate(const double degree)
 
 void Matrix::togray()
 {
-	cv::Mat temp = matrix.clone();
-	cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
-	std::cout << "Done: convert to gray picture." << std::endl;
+	if (matrix.type() == CV_8UC3) {
+		cv::Mat temp = matrix.clone();
+		cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
+		std::cout << "Done: convert to gray picture." << std::endl;
+	} else {
+		std::cout << "Err: the image is already a gray one." << std::endl;
+	}
 }
 
 void Matrix::tobin()
 {
-	togray();
+	if (matrix.type() != CV_8UC1) {
+		togray();
+	}
 	cv::Mat temp = matrix.clone();
-	cv::threshold(temp, matrix, 15, 100.0, 8);
+	cv::threshold(temp, matrix, 50, 150.0, 8);
 
 	std::cout << "Done: convert to binary picture." << std::endl;
 }
