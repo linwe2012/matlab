@@ -11,6 +11,9 @@
     <ClCompile Include="widgets\button.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="paintingWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -46,6 +49,8 @@
     </QtMoc>
     <QtMoc Include="widgets\fileselector.h">
       <Filter>Source Files</Filter>
+    <QtMoc Include="paintingWidget.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
