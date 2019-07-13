@@ -11,6 +11,9 @@
     <ClCompile Include="widgets\button.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="paintingWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </QtMoc>
     <QtMoc Include="matlab-gui.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="paintingWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
