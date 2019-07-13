@@ -44,6 +44,9 @@
     <QtMoc Include="matlab-gui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="widgets\fileselector.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="matlab-gui.ui">

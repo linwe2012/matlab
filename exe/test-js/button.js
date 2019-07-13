@@ -28,7 +28,19 @@ btn_read = new gui.Button(
         text: 'Open...',
         onclick: ()=> {
             ans = new Matrix;
-            ans.read('test-js/Lena.bmp')
+            gui.fileDialog(
+                {
+                    baseDir: '.',
+                    nameFilter: 'Images(*.png *.jpg *.jpeg *.bmp)',
+                    title: 'Open Image...',
+                    callback: (arr) => {
+                        if(arr.length) {
+                            ans.read(arr[0])
+                        }
+                    }
+                }
+            )
+            // ans.read('test-js/Lena.bmp')
             gui.display(ans)
         }
     }
