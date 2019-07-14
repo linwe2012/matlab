@@ -36,6 +36,10 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("linear", &Matrix::v8_linear)
 		.set("face", &Matrix::v8_face)
 		.set("clone", &Matrix::v8_clone)
+		.set("getColor", &Matrix::v8_clone)
+		.set("setColor", &Matrix::v8_clone)
+		.set("getRows", &Matrix::v8_clone)
+		.set("getCols", &Matrix::v8_clone)
 		;
 
 	shell->RegisterClasses(
@@ -172,6 +176,25 @@ void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
 	);
 }
 
+cv::Vec3b Matrix::v8_getColor(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	int row = v8pp::from_v8<int>(args.GetIsolate(), args[0], INT_MAX);
+	int col = v8pp::from_v8<int>(args.GetIsolate(), args[1], INT_MAX);
+
+	return getColor(row, col);
+}
+
+int Matrix::v8_getRows(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	return getRows();
+	return_this(args);
+}
+
+int Matrix::v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	return getCols();
+	return_this(args);
+}
 
 void Matrix::resize(const std::vector<int>& dims)
 {
@@ -263,7 +286,7 @@ void Matrix::rotate(const double degree)
 }
 
 void Matrix::togray()
-{
+{	
 	if (matrix.type() == CV_8UC3) {
 		cv::Mat temp = matrix.clone();
 		cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
@@ -319,4 +342,36 @@ void Matrix::face()
 	for (auto it = faces.begin(); it != faces.end(); ++it) {
 		cv::rectangle(matrix, *it, cv::Scalar(0, 0, 255), 3, 4, 0);
 	}
+}
+
+void Matrix::conv(cv::Mat& ker)
+{
+	cv::Mat temp = matrix.clone();
+	cv::filter2D(temp, matrix, -1, ker);
+}
+
+void Matrix::setColor(int x, int y, cv::Vec3b& color)
+{
+	matrix.at<cv::Vec3b>(x, y)[0] = color[0]; // B
+	matrix.at<cv::Vec3b>(x, y)[1] = color[1]; // G
+	matrix.at<cv::Vec3b>(x, y)[2] = color[2]; // R
+}
+
+cv::Vec3b Matrix::getColor(int x, int y)
+{
+	cv::Vec3b color;
+	color[0] = matrix.at<cv::Vec3b>(x, y)[0]; // B
+	color[1] = matrix.at<cv::Vec3b>(x, y)[1]; // G
+	color[2] = matrix.at<cv::Vec3b>(x, y)[2]; // R
+	return color;
+}
+
+int Matrix::getRows()
+{
+	return matrix.cols;
+}
+
+int Matrix::getCols()
+{
+	return matrix.cols;
 }
