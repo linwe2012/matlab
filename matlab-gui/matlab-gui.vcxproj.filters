@@ -11,6 +11,12 @@
     <ClCompile Include="widgets\button.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\slider.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\colorpicker.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -42,6 +48,12 @@
       <Filter>Source Files</Filter>
     </QtMoc>
     <QtMoc Include="matlab-gui.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\slider.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\colorpicker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

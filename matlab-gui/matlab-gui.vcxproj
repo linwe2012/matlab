@@ -123,6 +123,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matlab-gui.cpp" />
     <ClCompile Include="widgets\button.cc" />
+    <ClCompile Include="widgets\colorpicker.cc" />
+    <ClCompile Include="widgets\slider.cc" />
     <ClCompile Include="widgets\widgets.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +164,15 @@
     <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.hpp" />
     <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.ipp" />
     <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp" />
+    <QtMoc Include="widgets\colorpicker.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <ClInclude Include="widgets\registry.h" />
+    <QtMoc Include="widgets\slider.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <ClInclude Include="widgets\widget-helper.h" />
     <ClInclude Include="widgets\widgets-registery.h" />
     <ClInclude Include="widgets\widgets.h" />

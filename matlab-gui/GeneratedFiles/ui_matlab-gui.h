@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'matlab-gui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.13.0
+** Created by: Qt User Interface Compiler version 5.12.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -156,17 +156,17 @@ public:
 
     void retranslateUi(QMainWindow *MatlabGuiClass)
     {
-        MatlabGuiClass->setWindowTitle(QCoreApplication::translate("MatlabGuiClass", "MatlabGui", nullptr));
-        label->setText(QCoreApplication::translate("MatlabGuiClass", "\345\257\271\346\257\224\345\272\246", nullptr));
-        label_2->setText(QCoreApplication::translate("MatlabGuiClass", "\344\272\256\345\272\246", nullptr));
-        label_3->setText(QCoreApplication::translate("MatlabGuiClass", "\346\227\213\350\275\254", nullptr));
-        label_4->setText(QCoreApplication::translate("MatlabGuiClass", "\345\256\275\345\272\246", nullptr));
-        label_5->setText(QCoreApplication::translate("MatlabGuiClass", "\351\253\230\345\272\246", nullptr));
-        face->setText(QCoreApplication::translate("MatlabGuiClass", "\344\272\272\350\204\270\346\216\242\346\265\213", nullptr));
-        equalize->setText(QCoreApplication::translate("MatlabGuiClass", "\347\233\264\346\226\271\345\233\276\345\235\207\350\241\241", nullptr));
-        gray->setText(QCoreApplication::translate("MatlabGuiClass", "\347\201\260\345\272\246", nullptr));
-        bin->setText(QCoreApplication::translate("MatlabGuiClass", "\344\272\214\345\200\274\345\214\226", nullptr));
-        menu->setTitle(QCoreApplication::translate("MatlabGuiClass", "\346\265\213\350\257\225", nullptr));
+        MatlabGuiClass->setWindowTitle(QApplication::translate("MatlabGuiClass", "MatlabGui", nullptr));
+        label->setText(QApplication::translate("MatlabGuiClass", "\345\257\271\346\257\224\345\272\246", nullptr));
+        label_2->setText(QApplication::translate("MatlabGuiClass", "\344\272\256\345\272\246", nullptr));
+        label_3->setText(QApplication::translate("MatlabGuiClass", "\346\227\213\350\275\254", nullptr));
+        label_4->setText(QApplication::translate("MatlabGuiClass", "\345\256\275\345\272\246", nullptr));
+        label_5->setText(QApplication::translate("MatlabGuiClass", "\351\253\230\345\272\246", nullptr));
+        face->setText(QApplication::translate("MatlabGuiClass", "\344\272\272\350\204\270\346\216\242\346\265\213", nullptr));
+        equalize->setText(QApplication::translate("MatlabGuiClass", "\347\233\264\346\226\271\345\233\276\345\235\207\350\241\241", nullptr));
+        gray->setText(QApplication::translate("MatlabGuiClass", "\347\201\260\345\272\246", nullptr));
+        bin->setText(QApplication::translate("MatlabGuiClass", "\344\272\214\345\200\274\345\214\226", nullptr));
+        menu->setTitle(QApplication::translate("MatlabGuiClass", "\346\265\213\350\257\225", nullptr));
     } // retranslateUi
 
 };
