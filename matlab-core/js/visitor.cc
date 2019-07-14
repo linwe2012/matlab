@@ -9,6 +9,7 @@ V(BigInt)\
 V(BigIntObject)\
 V(Symbol)\
 V(SymbolObject)\
+V(Number)\
 V(NumberObject) \
 V(Boolean)\
 V(BooleanObject) \

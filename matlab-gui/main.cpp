@@ -1,6 +1,5 @@
 #include "matlab-gui.h"
 #include <QtWidgets/QApplication>
-
 #include "../matlab-core/matlab.h"
 #include <iostream>
 #include "widgets/widgets.h"

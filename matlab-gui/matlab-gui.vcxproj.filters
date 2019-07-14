@@ -2,13 +2,25 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="matlab-gui.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ribbon\ribbontabcontent.cpp">
+      <Filter>Source Files\ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="ribbon\ribbonbuttongroup.cpp">
+      <Filter>Source Files\ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="ribbon\ribbon.cpp">
+      <Filter>Source Files\ribbon</Filter>
     </ClCompile>
     <ClCompile Include="widgets\widgets.cc">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="paintingWidget.cpp">
+      <Filter>Source Files\widgets</Filter>
     </ClCompile>
     <ClCompile Include="widgets\button.cc">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="matlab-gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="widgets\slider.cc">
@@ -42,11 +54,17 @@
     <Filter Include="Header Files\v8pp">
       <UniqueIdentifier>{7235bf74-24ba-45cc-9e61-0b8882eb89b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ribbon">
+      <UniqueIdentifier>{879ccdaa-3cd5-4cbd-b309-6a4ebf1c2317}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ribbon">
+      <UniqueIdentifier>{e9c10883-ad9a-47bf-9a35-bbda2bc6be6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\widgets">
+      <UniqueIdentifier>{97802ef6-af0f-4491-b7a4-cde44dec6ec3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\button.h">
-      <Filter>Source Files</Filter>
-    </QtMoc>
     <QtMoc Include="matlab-gui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -56,9 +74,30 @@
     <QtMoc Include="widgets\colorpicker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="paintingWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ribbon\ribbon.h">
+      <Filter>Header Files\ribbon</Filter>
+    </QtMoc>
+    <QtMoc Include="ribbon\ribbonbuttongroup.h">
+      <Filter>Header Files\ribbon</Filter>
+    </QtMoc>
+    <QtMoc Include="ribbon\ribbontabcontent.h">
+      <Filter>Header Files\ribbon</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\button.h">
+      <Filter>Source Files\widgets</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="matlab-gui.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ribbon\ribbonbuttongroup.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ribbon\ribbontabcontent.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -72,12 +111,6 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="widgets\widgets-registery.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="widgets\widgets.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rdparty\include\v8pp\call_from_v8.hpp">
       <Filter>Header Files\v8pp</Filter>
     </ClInclude>
@@ -135,11 +168,26 @@
     <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp">
       <Filter>Header Files\v8pp</Filter>
     </ClInclude>
-    <ClInclude Include="widgets\widget-helper.h">
+    <ClInclude Include="widgets\fileselector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="widgets\widgets.h">
+      <Filter>Source Files\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\widgets-registery.h">
+      <Filter>Source Files\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\widget-helper.h">
+      <Filter>Source Files\widgets</Filter>
+    </ClInclude>
     <ClInclude Include="widgets\registry.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\layout.h">
+      <Filter>Source Files\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\ribbon-button.h">
+      <Filter>Source Files\widgets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,6 +5,9 @@
 #include "button.h"
 #include "widgets.h"
 #include "widget-helper.h"
+#include <QFileDialog>
+#include "fileselector.h"
+#include "layout.h"
 
 using namespace v8;
 
@@ -91,25 +94,61 @@ struct GuiModule {
 
 		auto& img = mat->matrix;
 		image_scene->addPixmap(QPixmap::fromImage(cvMatToQImage(img)));
+		image_view->setScene(image_scene);
+		image_view->setParent(target_widgets);
+		image_view->setGeometry(QRect(20, 120, 800, 800));
 		image_view->show();
+	}
+
+	void FileDiaglog(const FunctionCallbackInfo<Value>& args) {
+		INIT_OBJECT(args);
+		QFileDialog* fileDialog = new QFileDialog(target_widgets);
+		GET(std::string, baseDir);
+		GET(Local<Function>, callback);
+		GET(std::string, nameFilter);
+		GET(std::string, title);
+
+		fileDialog->setWindowTitle(title.c_str());
+		fileDialog->setDirectory(baseDir.c_str());
+		fileDialog->setNameFilter(nameFilter.c_str());
+		fileDialog->setViewMode(QFileDialog::Detail);
+		QStringList fileNames;
+		if (fileDialog->exec())
+		{
+			fileNames = fileDialog->selectedFiles();
+		}
+		Local<Array> arr = Array::New(isolate, fileNames.size());
+		int i = 0;
+		for (auto f : fileNames) {
+			arr->Set(i, MakeStr(isolate, f.toUtf8().constData()));
+		}
+		Local<Value> argv[] = { arr };
+		int argc = 1;
+		callback->CallAsFunction(context, js_self_, 1, argv);
+		delete fileDialog;
 	}
 
 	QGraphicsView* image_view;
 	QGraphicsScene* image_scene;
+	Local<Object> js_self_;
 };
+
+
 
 void ReigsterGui(V8Shell* shell, QMainWindow* main)
 {
 	v8pp::class_<GuiModule> gui(shell->GetIsolate());
 	gui
 		.set("display", &GuiModule::Display)
+		.set("fileDialog", &GuiModule::FileDiaglog)
 		;
 	Local<Object> mod = gui.create_object(shell->GetIsolate());
+	gui.unwrap_object(shell->GetIsolate(), mod)->js_self_ = mod;
+	Layout::Init(mod, shell);
 
 	Button::Init(mod, shell);
+	JSObjVeiwer::Init(mod, shell);
 	GuiModule& pmod = *gui.unwrap_object(shell->GetIsolate(), mod);
-
-	
 	
 	shell->RegisterGlobals(
 		{
@@ -124,7 +163,7 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	pmod.image_scene = new QGraphicsScene(main);
 
 	pmod.image_view->setScene(pmod.image_scene);
-	
+	// pmod.splitter_lr = new QSplitter(Qt::Horizontal, GetTargetWidget());
 
 	target_widgets = new QWidget(main);
 	target_widgets->setObjectName(QString::fromUtf8("toolbar"));

@@ -1,8 +1,9 @@
 #pragma once
 #include "matlab-gui.h"
 #include "qpushbutton.h"
+#include <QToolButton>
 
-class Button : public QPushButton {
+class Button : public QToolButton {
 public:
 	//Q_OBJECT
 public:
