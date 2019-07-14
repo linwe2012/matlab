@@ -12,6 +12,7 @@
         <file alias="live_folder_2.svg">Resources/icons/live_folder_2.svg</file>
         <file>Resources/icons/monitor_1.svg</file>
         <file>Resources/icons/save_2.svg</file>
+        <file alias="refresh_doc">Resources/icons/icons8-refresh-document-64.png</file>
     </qresource>
     <qresource prefix="/icons/filetype">
         <file alias="bmp">Resources/icons/filetype/bmp.png</file>

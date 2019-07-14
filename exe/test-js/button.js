@@ -106,6 +106,13 @@ btn_read = new gui.Button({
 
 
 vw_global = new gui.ObjectViewer();
+btn_refresh_obj = new gui.Button({
+    icon: ':/icons/refresh_doc',
+    text: 'Refresh',
+    onclick: ()=> {
+        vw_global = new gui.ObjectViewer();
+    }
+})
 
 
 function CheckAns() {
@@ -159,8 +166,8 @@ ckbx_setting_rec_script = new gui.Checkbox({
         internal.enable_script_stk = boolean
     }
 })
-gui.ribbon.addCheckBox(ckbx_setting, 'Settings', 'Commands')
-gui.ribbon.add(ckbx_setting, 'Settings', 'Commands')
+gui.ribbon.addWild(ckbx_setting, 'Settings', 'Commands')
+gui.ribbon.addWild(ckbx_setting, 'Settings', 'Commands')
 */
 
 // gui.ribbon.add(target button, Tab name, group name)
@@ -170,6 +177,7 @@ gui.ribbon.add(btn_save_jpg, 'Project', 'Save as');
 gui.ribbon.add(btn_save_png, 'Project', 'Save as');
 gui.ribbon.add(btn_save_bmp, 'Project', 'Save as');
 gui.ribbon.add(btn_save_tif, 'Project', 'Save as');
+gui.ribbon.add(btn_refresh_obj, 'Project', 'Object Viewer');
 
 gui.ribbon.add(btn_undo, 'Edit', 'Navigate');
 gui.ribbon.add(btn_redo, 'Edit', 'Navigate');
