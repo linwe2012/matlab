@@ -3,7 +3,7 @@
 #include "registry.h"
 
 Button::Button(const FunctionCallbackInfo<Value>& args)
-	: QPushButton(GetTargetWidget())
+	: QToolButton(GetTargetWidget())
 {
 	// auto [text, callback] = GetProperties<std::string, Local<Function>>(
 	// 	isolate, args[0]->ToObject(context).ToLocalChecked(),
@@ -14,6 +14,11 @@ Button::Button(const FunctionCallbackInfo<Value>& args)
 
 	GET(std::string, text);
 	GET(Local<Function>, onclick);
+	GET_IF(std::string, icon, "");
+
+	if (!icon.empty()) {
+		this->setIcon(QIcon(icon.c_str()));
+	}
 	this->setText(text.c_str());
 	// this->resize(QSize(900, 1000));
 	auto sz = GetCurrentLayout().width();

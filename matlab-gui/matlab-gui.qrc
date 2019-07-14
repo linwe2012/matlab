@@ -1,4 +1,26 @@
 <RCC>
-    <qresource prefix="MatlabGui">
+    <qresource prefix="/MatlabGui"/>
+    <qresource prefix="/icons">
+        <file>Resources/icons/add_database_2.svg</file>
+        <file>Resources/icons/add_folder_2.svg</file>
+        <file>Resources/icons/add_link_2.svg</file>
+        <file>Resources/icons/briefcase_1.svg</file>
+        <file>Resources/icons/create_new_2.svg</file>
+        <file>Resources/icons/engineering_1.svg</file>
+        <file>Resources/icons/file_2.svg</file>
+        <file>Resources/icons/information_1.svg</file>
+        <file alias="live_folder_2.svg">Resources/icons/live_folder_2.svg</file>
+        <file>Resources/icons/monitor_1.svg</file>
+        <file>Resources/icons/save_2.svg</file>
+    </qresource>
+    <qresource prefix="/icons/filetype">
+        <file alias="bmp">Resources/icons/filetype/bmp.png</file>
+        <file alias="png">Resources/icons/filetype/png.png</file>
+        <file alias="tif">Resources/icons/filetype/tif.png</file>
+        <file alias="jpg">Resources/icons/filetype/jpg.png</file>
+    </qresource>
+    <qresource prefix="/icons/edit">
+        <file alias="bin">Resources/icons/edit/icons8-binary-file-50.png</file>
+        <file alias="gray">Resources/icons/edit/icons8-grayscale-50.png</file>
     </qresource>
 </RCC>

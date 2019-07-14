@@ -3,6 +3,13 @@
 v8pp::from_v8<type>(isolate,         \
 obj->Get(String::NewFromUtf8(isolate, #name, NewStringType::kNormal).ToLocalChecked()))
 
+// Get if (type, name fallback) name = fallback if get failed
+#define GET_IF(type, name, fallback) type name =  \
+v8pp::from_v8<type>(isolate,         \
+obj->Get(String::NewFromUtf8(isolate, #name, NewStringType::kNormal).ToLocalChecked()), fallback)
+
+
+
 #define GET_V8(name) obj->Get(String::NewFromUtf8(isolate, #name, NewStringType::kNormal).ToLocalChecked())
 
 #define INIT_OBJECT(a)                                \

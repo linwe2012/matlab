@@ -123,6 +123,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matlab-gui.cpp" />
     <ClCompile Include="paintingWidget.cpp" />
+    <ClCompile Include="ribbon\ribbon.cpp" />
+    <ClCompile Include="ribbon\ribbonbuttongroup.cpp" />
+    <ClCompile Include="ribbon\ribbontabcontent.cpp" />
     <ClCompile Include="widgets\button.cc" />
     <ClCompile Include="widgets\widgets.cc" />
   </ItemGroup>
@@ -131,6 +134,8 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="matlab-gui.ui" />
+    <QtUic Include="ribbon\ribbonbuttongroup.ui" />
+    <QtUic Include="ribbon\ribbontabcontent.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="matlab-gui.qrc" />
@@ -140,10 +145,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="widgets\button.h">
-      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
-      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
-    </QtMoc>
+    <QtMoc Include="widgets\button.h" />
     <ClInclude Include="..\3rdparty\include\v8pp\call_from_v8.hpp" />
     <ClInclude Include="..\3rdparty\include\v8pp\call_v8.hpp" />
     <ClInclude Include="..\3rdparty\include\v8pp\class.hpp" />
@@ -163,12 +165,32 @@
     <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.hpp" />
     <ClInclude Include="..\3rdparty\include\v8pp\throw_ex.ipp" />
     <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp" />
-    <QtMoc Include="widgets\fileselector.h">
     <QtMoc Include="paintingWidget.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)</IncludePath>
+    </QtMoc>
+    <QtMoc Include="ribbon\ribbon.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>
+    <QtMoc Include="ribbon\ribbonbuttongroup.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="ribbon\ribbontabcontent.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <ClInclude Include="widgets\fileselector.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </ClInclude>
+    <ClInclude Include="widgets\layout.h" />
     <ClInclude Include="widgets\registry.h" />
+    <ClInclude Include="widgets\ribbon-button.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </ClInclude>
     <ClInclude Include="widgets\widget-helper.h" />
     <ClInclude Include="widgets\widgets-registery.h" />
     <ClInclude Include="widgets\widgets.h" />
@@ -180,7 +202,7 @@
   <ImportGroup Label="ExtensionTargets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="5.13.0" MocOptions="" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="msvc2017_64" MocOptions="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

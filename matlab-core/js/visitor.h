@@ -70,7 +70,7 @@ public:
 	void Visit(nullptr_t n) override { target->Visit(n); }
 
 	void Visit(Local<v8::String> v) override { 
-		String::Utf8Value utf8(isolate, v);
+		v8::String::Utf8Value utf8(isolate, v);
 		target->Visit(*utf8);
 	};
 
@@ -128,7 +128,7 @@ public:
 	}
 
 	void Visit(Local<v8::Function>) override {
-
+		target->Visit("<function>");
 	}
 
 	void Visit(Local<v8::Date>) override {
@@ -139,13 +139,13 @@ public:
 		//TODO
 	}
 
-	void Bind(SimpleJSVisitor* _targte, Isolate* _isolate) {
+	void Bind(SimpleJSVisitor* _targte, v8::Isolate* _isolate) {
 		target = _targte;
 		isolate = _isolate;
 	}
 
 	SimpleJSVisitor* target;
-	Isolate* isolate;
+	v8::Isolate* isolate;
 };
 
 

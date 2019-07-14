@@ -4,6 +4,7 @@
 #include "ui_matlab-gui.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
+
 #include "../matlab-core/matlab.h"
 #include "paintingWidget.h"
 
