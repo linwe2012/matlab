@@ -55,9 +55,19 @@ void RibbonButtonGroup::addButton(QToolButton *button)
 
 void RibbonButtonGroup::addWidget(QWidget* widget)
 {
+	widget->setParent(this);
 	widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	widget->setMinimumSize(24, 24);
+	
 	ui->horizontalLayout->addWidget(widget);
+}
+
+void RibbonButtonGroup::addLayout(QLayout* layout) {
+	//layout->setParent(ui->horizontalLayout);
+	
+	ui->horizontalLayout->addLayout(layout);
+	// ui->horizontalLayout->addItem(layout);
+	layout->widget();
 }
 
 void RibbonButtonGroup::removeButton(QToolButton *button)

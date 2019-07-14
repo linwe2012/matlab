@@ -4,6 +4,7 @@
 #include "ribbon/ribbon.h"
 #include "widget-helper.h"
 #include "button.h"
+#include "slider.h"
 
 class Layout {
 public:
@@ -26,13 +27,33 @@ public:
 			ribbon->show();
 		}
 
-		void AddWild(QWidget* widget, const char* tab_name, const char* group_name) {
-			ribbon->setParent(GetTargetWidget());
+		void AddSlider(Slider* widget, const char* tab_name, const char* group_name) {
+			//ribbon->setParent(GetTargetWidget());
+			/*
+			for (auto w : widget->GetAllWidget()) {
+				ribbon->addWidget(
+					tab_name,
+					group_name,
+					w
+				);
+			}
+			*/
+			ribbon->addLayout(
+				tab_name,
+				group_name,
+				widget->GetLayout()
+			);
+			
+			ribbon->show();
+		}
+
+		void AddWild(QWidget* w, const char* tab_name, const char* group_name) {
 			ribbon->addWidget(
 				tab_name,
 				group_name,
-				widget
+				w
 			);
+
 			ribbon->show();
 		}
 
@@ -45,6 +66,7 @@ public:
 		v8pp::class_<RibbonProxy> ribbon(isolate);
 		ribbon
 			.set("add", &RibbonProxy::Add)
+			.set("addSlider", &RibbonProxy::AddSlider)
 			.set("addWild", &RibbonProxy::AddWild)
 			;
 

@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include "fileselector.h"
 #include "layout.h"
+#include "slider.h"
+#include "colorpicker.h"
 
 using namespace v8;
 
@@ -146,9 +148,12 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	gui.unwrap_object(shell->GetIsolate(), mod)->js_self_ = mod;
 	Layout::Init(mod, shell);
 
+	ColorPicker::Init(mod, shell);
+	Slider::Init(mod, shell);
 	Button::Init(mod, shell);
 	JSObjVeiwer::Init(mod, shell);
 	GuiModule& pmod = *gui.unwrap_object(shell->GetIsolate(), mod);
+	
 	
 	shell->RegisterGlobals(
 		{

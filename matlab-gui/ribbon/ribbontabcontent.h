@@ -52,6 +52,8 @@ public:
 
   void addWidget(const QString& groupName, QWidget* widget);
 
+  void addLayout(const QString& groupName, QLayout* layout);
+
   /// Remove a button from the specified group.
   /// The group is also removed if it's empty.
   ///

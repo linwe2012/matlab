@@ -49,6 +49,8 @@ public:
 
   void addWidget(QWidget* widget);
 
+  void addLayout(QLayout* layout);
+
   /// Remove a button from the group.
   ///
   /// \param[in] button The button

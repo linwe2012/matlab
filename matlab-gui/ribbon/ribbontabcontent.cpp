@@ -117,6 +117,37 @@ void RibbonTabContent::addWidget(const QString& groupName, QWidget* widget)
 	}
 }
 
+void RibbonTabContent::addLayout(const QString& groupName, QLayout* layout)
+{
+	// Find ribbon group
+	RibbonButtonGroup* ribbonButtonGroup = nullptr;
+	for (int i = 0; i < ui->ribbonHorizontalLayout->count(); i++)
+	{
+		RibbonButtonGroup* group = static_cast<RibbonButtonGroup*>(ui->ribbonHorizontalLayout->itemAt(i)->widget());
+		if (group->title().toLower() == groupName.toLower())
+		{
+			ribbonButtonGroup = group;
+			break;
+		}
+	}
+
+	if (ribbonButtonGroup != nullptr)
+	{
+		// Group found
+		// Add ribbon button
+		ribbonButtonGroup->addLayout(layout);
+	}
+	else
+	{
+		// Group not found
+		// Add ribbon group
+		addGroup(groupName);
+
+		// Add ribbon button
+		addLayout(groupName, layout);
+	}
+}
+
 void RibbonTabContent::removeButton(const QString &groupName, QToolButton *button)
 {
   // Find ribbon group

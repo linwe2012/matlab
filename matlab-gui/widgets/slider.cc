@@ -3,49 +3,58 @@
 #include "registry.h"
 
 Slider::Slider(const FunctionCallbackInfo<Value>& args)
-  : QWidget(GetTargetWidget())
+  : QSlider(GetTargetWidget())
 {
   INIT_OBJECT(args);
 
   GET(std::string, text);
   GET(Local<Function>, onslide);
-  int nMin = 0;
-  int nMax = 100;
+  GET_IF(int, max, 100);
+  GET_IF(int, min, 0);
+  int nMin = min;
+  int nMax = max;
 
-  QHBoxLayout* layout = new QHBoxLayout(this);
+  // QHBoxLayout* layout = new QHBoxLayout(GetTargetWidget());
+  layout_ = new QHBoxLayout();
   name_ = new QLabel(text.c_str());
-  layout->addWidget(name_);
-  slider_ = new QSlider();
-  slider_->setMinimum(nMin);
-  slider_->setMaximum(nMax);
-  layout->addWidget(slider_);
+  layout_->setDirection(QHBoxLayout::Up);
+  layout_->addWidget(name_);
+  //slider_ = new QSlider();
+  this->setMinimum(nMin);
+  this->setMaximum(nMax);
+  //this->setSingleStep(1);
+  this->setOrientation(Qt::Horizontal);
+  //slider_->setMinimum(nMin);
+  //slider_->setMaximum(nMax);
+  layout_->addWidget(this);
   spinbox_ = new QDoubleSpinBox();
   spinbox_->setMinimum(nMin);
   spinbox_->setMaximum(nMax);
-  layout->addWidget(spinbox_);
-  connect(spinbox_, SIGNAL(valueChanged(int)), slider_, SLOT(setValue(int)));
-  connect(slider_, SIGNAL(valueChanged(int)), spinbox_, SLOT(setValue(int)));
-  slider_->setValue(0);
-
+  layout_->addWidget(spinbox_);
+  connect(spinbox_, SIGNAL(valueChanged(int)), this, SLOT(setValue(int)));
+  connect(this, SIGNAL(valueChanged(int)), spinbox_, SLOT(setValue(int)));
+  // this->setValue(0);
+  
+  
   auto sz = GetCurrentLayout().width();
   sz += this->size().width() + 20;
   GetCurrentLayout().setWidth(sz);
-  this->setGeometry(QRect(sz, 530, 200, 22));
 
   text_ = text;
   onslide_ = onslide;
 
-  connect(slider_, SIGNAL(valueChanged(int)), this, SLOT(SlideCallback()));
+  connect(this, SIGNAL(valueChanged(int)), this, SLOT(SlideCallback()));
 
   isolate_ = isolate;
   context_ = isolate->GetCurrentContext();
-
+  
   js_self_ = args.GetReturnValue().Get()->ToObject(context_).ToLocalChecked();
   js_self_->Set(MakeStr(isolate, "onslide_func"), (onslide));
 }
 
 void Slider::SlideCallback() {
-  Local<Number> arg1 = Number::New(isolate_, double(spinbox_->value()));
+	double v = this->value();
+  Local<Number> arg1 = Number::New(isolate_, double(this->value()));
   Local<Value> argv[] = { arg1 };
   js_self_ = v8pp::class_<Slider>::find_object(isolate_, this);
   onslide_ = Local<Function>::Cast(js_self_->Get(MakeStr(isolate_, "onslide_func")));
