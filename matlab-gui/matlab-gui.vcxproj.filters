@@ -29,6 +29,9 @@
     <ClCompile Include="widgets\colorpicker.cc">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\checkbox.cc">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -68,9 +71,6 @@
     <QtMoc Include="matlab-gui.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\colorpicker.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="paintingWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -87,6 +87,12 @@
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\slider.h">
+      <Filter>Source Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\colorpicker.h">
+      <Filter>Source Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\checkbox.h">
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
   </ItemGroup>
