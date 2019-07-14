@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'matlab-gui.ui'
 **
-** Created by: Qt User Interface Compiler version 5.13.0
+** Created by: Qt User Interface Compiler version 5.12.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -276,6 +276,7 @@ public:
 
     void retranslateUi(QMainWindow *MatlabGuiClass)
     {
+
         MatlabGuiClass->setWindowTitle(QCoreApplication::translate("MatlabGuiClass", "MatlabGui", nullptr));
         label->setText(QCoreApplication::translate("MatlabGuiClass", "\345\257\271\346\257\224\345\272\246", nullptr));
         label_2->setText(QCoreApplication::translate("MatlabGuiClass", "\344\272\256\345\272\246", nullptr));
