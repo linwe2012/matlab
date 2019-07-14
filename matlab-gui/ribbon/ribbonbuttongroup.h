@@ -47,6 +47,8 @@ public:
   /// \param[in] button The button
   void addButton(QToolButton *button);
 
+  void addWidget(QWidget* widget);
+
   /// Remove a button from the group.
   ///
   /// \param[in] button The button

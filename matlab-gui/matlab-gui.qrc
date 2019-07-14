@@ -22,5 +22,7 @@
     <qresource prefix="/icons/edit">
         <file alias="bin">Resources/icons/edit/icons8-binary-file-50.png</file>
         <file alias="gray">Resources/icons/edit/icons8-grayscale-50.png</file>
+        <file alias="redo">Resources/icons/edit/icons8-redo-64.png</file>
+        <file alias="undo">Resources/icons/edit/icons8-undo-64.png</file>
     </qresource>
 </RCC>

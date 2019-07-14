@@ -69,6 +69,26 @@ btn_save_tif = new gui.Button(
     }
 );
 
+btn_undo = new gui.Button(
+    {
+        icon: ':/icons/edit/undo',
+        text: 'Undo',
+        onclick: ()=> {
+            if(!CheckAns()) return;
+        }
+    }
+);
+
+btn_redo = new gui.Button(
+    {
+        icon: ':/icons/edit/redo',
+        text: 'Redo',
+        onclick: ()=> {
+            if(!CheckAns()) return;
+        }
+    }
+);
+
 btn_read = new gui.Button(
     {
         icon: ':/icons/live_folder_2.svg',
@@ -93,6 +113,7 @@ btn_read = new gui.Button(
     }
 )
 
+
 vw_global = new gui.ObjectViewer();
 
 
@@ -109,6 +130,9 @@ gui.ribbon.add(btn_save_jpg, 'Project', 'Save as');
 gui.ribbon.add(btn_save_png, 'Project', 'Save as');
 gui.ribbon.add(btn_save_bmp, 'Project', 'Save as');
 gui.ribbon.add(btn_save_tif, 'Project', 'Save as');
+
+gui.ribbon.add(btn_undo, 'Edit', 'Navigate');
+gui.ribbon.add(btn_redo, 'Edit', 'Navigate');
 
 gui.ribbon.add(btn_gray, 'Edit', 'Mono');
 gui.ribbon.add(btn_bin, 'Edit', 'Mono');

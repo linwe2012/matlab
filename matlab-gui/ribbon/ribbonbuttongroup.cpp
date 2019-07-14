@@ -53,6 +53,13 @@ void RibbonButtonGroup::addButton(QToolButton *button)
   ui->horizontalLayout->addWidget(button);
 }
 
+void RibbonButtonGroup::addWidget(QWidget* widget)
+{
+	widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+	widget->setMinimumSize(24, 24);
+	ui->horizontalLayout->addWidget(widget);
+}
+
 void RibbonButtonGroup::removeButton(QToolButton *button)
 {
   /// \todo What happens if button is not part of the layout?

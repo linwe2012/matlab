@@ -18,8 +18,6 @@ public:
 		}
 		void Add(Button* n, const char* tab_name, const char* group_name) {
 			ribbon->setParent(GetTargetWidget());
-			QString qtab = tab_name;
-			QString qgroup = group_name;
 			ribbon->addButton(
 				tab_name,
 				group_name,
@@ -27,6 +25,18 @@ public:
 			);
 			ribbon->show();
 		}
+
+		void AddWild(QWidget* widget, const char* tab_name, const char* group_name) {
+			ribbon->setParent(GetTargetWidget());
+			ribbon->addWidget(
+				tab_name,
+				group_name,
+				widget
+			);
+			ribbon->show();
+		}
+
+
 		Ribbon* ribbon;
 	};
 	static void Init(Local<Object> mod, V8Shell* shell) {
@@ -34,7 +44,9 @@ public:
 
 		v8pp::class_<RibbonProxy> ribbon(isolate);
 		ribbon
-			.set("add", &RibbonProxy::Add);
+			.set("add", &RibbonProxy::Add)
+			.set("addWild", &RibbonProxy::AddWild)
+			;
 
 		mod->Set(
 			MakeStr(isolate, "ribbon"),
