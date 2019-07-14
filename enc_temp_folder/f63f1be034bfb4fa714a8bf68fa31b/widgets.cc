@@ -136,7 +136,6 @@ struct GuiModule {
       GET(std::string, nameFilter);
       GET(std::string, title);
       GET_IF(std::string, name, "");
-
       fileDialog->setWindowTitle(title.c_str());
       fileDialog->setDirectory(baseDir.c_str());
       fileDialog->setNameFilter(nameFilter.c_str());
