@@ -10,7 +10,6 @@
 #include "layout.h"
 #include "slider.h"
 #include "colorpicker.h"
-
 using namespace v8;
 
 
@@ -129,13 +128,44 @@ struct GuiModule {
 		callback->CallAsFunction(context, js_self_, 1, argv);
 		delete fileDialog;
 	}
+    void SaveAsDialog(const FunctionCallbackInfo<Value>& args) {
+      INIT_OBJECT(args);
+      QFileDialog* fileDialog = new QFileDialog(target_widgets);
+      GET(std::string, baseDir);
+      GET(Local<Function>, callback);
+      GET(std::string, nameFilter);
+      GET(std::string, title);
+      GET_IF(std::string, name, "");
+
+      fileDialog->setWindowTitle(title.c_str());
+      fileDialog->setDirectory(baseDir.c_str());
+      fileDialog->setNameFilter(nameFilter.c_str());
+      fileDialog->setViewMode(QFileDialog::Detail);
+      fileDialog->setAcceptMode(QFileDialog::AcceptSave);
+      fileDialog->setOptions(QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+      fileDialog->selectFile(name.c_str());
+      QStringList fileNames;
+      if (fileDialog->exec())
+      {
+        fileNames = fileDialog->selectedFiles();
+      }
+      Local<Array> arr = Array::New(isolate, fileNames.size());
+      int i = 0;
+      for (auto f : fileNames) {
+        arr->Set(i, MakeStr(isolate, f.toUtf8().constData()));
+      }
+      Local<Value> argv[] = { arr };
+      int argc = 1;
+      callback->CallAsFunction(context, js_self_, 1, argv);
+      delete fileDialog;
+    }
 
 	QGraphicsView* image_view;
 	QGraphicsScene* image_scene;
 	Local<Object> js_self_;
 };
 
-
+  
 
 void ReigsterGui(V8Shell* shell, QMainWindow* main)
 {

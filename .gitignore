@@ -17,3 +17,5 @@ packages
 **/*.pdb
 
 **/test-output
+
+**/GeneratedFiles

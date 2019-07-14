@@ -1,0 +1,12 @@
+V8 version 7.5.288.23 [Javascript shell]
+(name) => {
+    if(shell.getExt(name).length == 0) {
+        name = name + ".js"
+    }
+
+    shell.execfile('test-js/' + name)
+}
+false
+i=1
+[undo]0
+true
