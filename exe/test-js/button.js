@@ -3,41 +3,102 @@ internal = {
     enable_cmd_stk: true,
     enable_script_stk: false,
     command_stack: [],
-    command_script_stack: []
+    command_stack_cursor: 0,
+    command_script_stack: [],
+    enable_refresh_img: true,
+
+    add_cmd(obj, src) {
+        if(this.enable_cmd_stk) {
+            if(this.command_stack_cursor < this.command_stack.length) {
+                this.command_stack[this.command_stack_cursor] = obj
+                this.command_script_stack[this.command_stack_cursor] = src
+            }
+            else {
+                this.command_stack.push(obj);
+                this.command_script_stack.push(src);
+            }
+            
+            ++this.command_stack_cursor;
+        }
+    }
 }
 
+function RefreshImg(img) {
+    if(internal.enable_refresh_img) {
+        gui.display(img)
+    }
+}
+
+function ToBin() {
+    if(!CheckAns()) return;
+    ans.tobin();
+    RefreshImg(ans)
+}
 
 btn_bin = new gui.Button(
     {
         icon: ':/icons/edit/bin',
-        text: 'Binerize',
+        text: 'Binarize',
         onclick: ()=> {
             if(!CheckAns()) return;
-            ans.tobin();
-            gui.display(ans)
+            var s = {
+                undo(){
+                    ans = this.data;
+                    RefreshImg(ans);
+                },
+                data: ans.clone(),
+                redo: ToBin
+            }
+        
+            internal.add_cmd(s, 'ToBin()')
+            s.redo()
         }
     }
 );
+function ToGray() {
+    if(!CheckAns()) return;
+    ans.togray();
+    RefreshImg(ans)
+}
 
 
 btn_gray = new gui.Button(
     {
         icon: ':/icons/edit/gray',
-        text: 'Mono Color',
+        text: 'Grayscale',
         onclick: ()=> {
             if(!CheckAns()) return;
-            ans.togray();
-            gui.display(ans)
+            internal.add_cmd({
+                data: ans.clone(),
+                undo(){ ans = this.data; RefreshImg(ans); shell.print('[undo]: to gray')},
+                redo: ToGray
+            }, 'ToGray()')
+            ToGray()
         }
     }
 );
+
+function WriteImage(type) {
+
+    if(!CheckAns()) return;
+
+    if(internal.enable_cmd_stk) {
+        internal.add_cmd({
+            undo() {},
+            data:  {
+                type: 'png'
+            },
+            redo(){WriteImage(this.data.type)}
+        }, 'WriteImage("',type, '")')
+    }
+    ans.write('output' + '.' + type)
+}
 
 btn_save_png = new gui.Button({
     icon: ':/icons/filetype/png',
     text: 'Lossless',
     onclick: ()=> {
-        if(!CheckAns()) return;
-        ans.write('output' + '.png')
+        WriteImage('png')
     }
 });
 
@@ -45,8 +106,7 @@ btn_save_jpg = new gui.Button({
     icon: ':/icons/filetype/jpg',
     text: 'Lossy',
     onclick: ()=> {
-        if(!CheckAns()) return;
-        ans.write('output' + '.jpg')
+        WriteImage('jpg')
     }
 });
 
@@ -54,8 +114,7 @@ btn_save_bmp = new gui.Button({
     icon: ':/icons/filetype/bmp',
     text: 'Bitmap',
     onclick: ()=> {
-        if(!CheckAns()) return;
-        ans.write('output' + '.bmp')
+        WriteImage('bmp')
     }
 });
 
@@ -63,37 +122,53 @@ btn_save_tif = new gui.Button({
     icon: ':/icons/filetype/tif',
     text: 'TIF',
     onclick: ()=> {
-        if(!CheckAns()) return;
-        ans.write('output' + '.tif')
+        WriteImage('tif')
     }
 });
 
 btn_undo = new gui.Button({
     icon: ':/icons/edit/undo',
     text: 'Undo',
-    onclick: ()=> {
-        if(!CheckAns()) return;
+    onclick() {
+        var i = internal.command_stack_cursor
+        if(i > 0) {
+            let last = internal.enable_cmd_stk
+            internal.enable_cmd_stk = false
+            shell.print(internal.enable_cmd_stk)
+            shell.print('i=', i)
+            --internal.command_stack_cursor
+            internal.command_stack[i-1].undo();
+            internal.enable_cmd_stk = last;
+            shell.print(internal.enable_cmd_stk)
+        }
     }
 });
 
 btn_redo = new gui.Button({
     icon: ':/icons/edit/redo',
     text: 'Redo',
-    onclick: ()=> {
-        if(!CheckAns()) return;
+    onclick() {
+        var  i = internal.command_stack_cursor;
+        if(i < internal.command_stack.length) {
+            let last = internal.enable_cmd_stk
+            internal.enable_cmd_stk = false
+            internal.command_stack[i].redo();
+            ++internal.command_stack_cursor;
+            internal.enable_cmd_stk = last;
+        }
     }
 });
 
 btn_read = new gui.Button({
     icon: ':/icons/live_folder_2.svg',
     text: 'Open...',
-    onclick: ()=> {
+    onclick() {
         ans = new Matrix;
         gui.fileDialog({
             baseDir: '.',
             nameFilter: 'Images(*.png *.jpg *.jpeg *.bmp *.tif)',
             title: 'Open Image...',
-            callback: (arr) => {
+            callback (arr) {
                 if(arr.length > 0) {
                     ans.read(arr[0])
                     ans['filename'] = arr[0]
@@ -123,33 +198,53 @@ function CheckAns() {
     return true;
 }
 
-function RotateCallback(degree) {
+function RotateCallback(degree, make_record) {
     if(!CheckAns()) return;
-
-    if(ans['rotate'] === undefined || ans['rotate'] === null) {
-        ans['rotate'] = 0;
+    if(typeof(ans.data_rotate) === 'undefined' || ans.data_rotate === null) {
+        ans['data_rotate'] = 0;
     }
 
-    var delta = degree - ans['rotate'];
+    if(internal.enable_cmd_stk && make_record) {
+        internal.add_cmd({
+            redo(){RotateCallback(this.data.redo);},
+            undo(){RotateCallback(this.data.undo)},
+            data: {
+                redo: degree,
+                undo: ans.data_rotate
+            }
+        }, 'RotateCallback(' + degree +  ', true)')
+    }
+    
+    var delta = degree - ans.data_rotate;
+    ans.data_rotate = degree;
     ans.rotate(delta);
+    RefreshImg(ans)
 }
 
 sld_rotate = new gui.Slider({
     max: 180,
     min: -180,
     text: 'Rotate',
-    onslide: (degree)=>{
-        //shell.print('degree: ', degree, ' delta:', delta)
+    onslide(degree){
+        RotateCallback(degree, false)
+    },
+    onpress() {
         if(!CheckAns()) return;
-    
-        if(typeof(ans.rotate) === 'undefined') {
-            ans['rotate'] = 0;
+        if(typeof(ans.data_rotate) === 'undefined' || ans.data_rotate === null) {
+            ans['data_rotate'] = 0;
         }
-    
-        var delta = degree - ans['rotate'];
-        shell.print('degree: ', degree, ' delta: ', delta)
-        ans.rotate(delta);
-        
+        ans['data_begin_rotate'] = ans['data_rotate']
+    },
+    onrelease() {
+        if(!CheckAns()) return;
+        internal.add_cmd({
+            data: {
+                redo: ans.data_rotate,
+                undo: ans.data_begin_rotate
+            },
+            redo(){RotateCallback(this.data.redo, true); sld_rotate.setValue(this.data.redo)},
+            undo(){RotateCallback(this.data.undo, true); sld_rotate.setValue(this.data.undo); shell.print('[undo]', this.data.undo)}
+        }, 'RotateCallback(' + ans.data_begin_rotate + ', true)')
     }
 })
 /*

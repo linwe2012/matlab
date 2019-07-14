@@ -6,3 +6,14 @@ V8 version 7.5.288.23 [Javascript shell]
 
     shell.execfile('test-js/' + name)
 }
+false
+i=2
+[undo]: to gray
+true
+false
+i=1
+[undo]0
+true
+false
+i=1
+true

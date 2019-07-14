@@ -164,11 +164,25 @@ void Matrix::v8_face(const v8::FunctionCallbackInfo<v8::Value>& args)
 void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	Isolate* isolate = args.GetIsolate();
+	auto obj = (*gMatrixClass).create_object(
+		isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone(),
+		shell_
+	);
+	Local<Array> keys = args.This()->GetOwnPropertyNames(isolate->GetCurrentContext()).ToLocalChecked();
+	int len = keys->Length();
+	for (int i = 0; i < len; ++i) {
+
+		auto key = v8pp::from_v8<Local<String>>(isolate, keys->Get(i));
+		auto value = obj->Get(isolate->GetCurrentContext(), keys->Get(i));
+
+		obj->Set(
+			isolate->GetCurrentContext(),
+			keys->Get(i),
+			args.This()->Get(isolate->GetCurrentContext(), keys->Get(i)).ToLocalChecked()
+		);
+	}
 	args.GetReturnValue().Set(
-		(*gMatrixClass).create_object(
-			isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone(),
-			shell_
-		)
+		obj
 	);
 }
 
