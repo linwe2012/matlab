@@ -6,3 +6,34 @@ V8 version 7.5.288.23 [Javascript shell]
 
     shell.execfile('test-js/' + name)
 }
+degree: 2 delta: NaN
+degree: 15 delta: NaN
+degree: 37 delta: NaN
+degree: 54 delta: NaN
+degree: 56 delta: NaN
+degree: 65 delta: NaN
+degree: 69 delta: NaN
+degree: 72 delta: NaN
+degree: 74 delta: NaN
+degree: 80 delta: NaN
+degree: 85 delta: NaN
+degree: 87 delta: NaN
+degree: 89 delta: NaN
+degree: 91 delta: NaN
+degree: 93 delta: NaN
+degree: 95 delta: NaN
+degree: 98 delta: NaN
+degree: 100 delta: NaN
+degree: 102 delta: NaN
+degree: 80 delta: NaN
+degree: 9 delta: NaN
+degree: -26 delta: NaN
+degree: -41 delta: NaN
+degree: -63 delta: NaN
+degree: -76 delta: NaN
+degree: -91 delta: NaN
+degree: -102 delta: NaN
+degree: -119 delta: NaN
+degree: -141 delta: NaN
+degree: -178 delta: NaN
+degree: -180 delta: NaN
