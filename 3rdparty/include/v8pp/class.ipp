@@ -67,8 +67,9 @@ V8PP_IMPL object_registry<Traits>::object_registry(v8::Isolate* isolate, type_in
 	js_func_.Reset(isolate, js_func);
 
 	// each JavaScript instance has 3 internal fields:
-	//  0 - pointer to a wrapped C++ object
+	//  0 - pointer to a wrapped C++ object <--(leon) doest sounds to me like that in the code
 	//  1 - pointer to this object_registry
+	///  3 - pointer to a wrapped C++ object (added by leon)
 	func->InstanceTemplate()->SetInternalFieldCount(2);
 	func->Inherit(js_func);
 }
@@ -202,6 +203,7 @@ V8PP_IMPL v8::Local<v8::Object> object_registry<Traits>::wrap_object(pointer_typ
 
 	obj->SetAlignedPointerInInternalField(0, Traits::pointer_id(object));
 	obj->SetAlignedPointerInInternalField(1, this);
+	// obj->SetAlignedPointerInInternalField(2, object);
 
 	v8::Global<v8::Object> pobj(isolate_, obj);
 	pobj.SetWeak(this, [](v8::WeakCallbackInfo<object_registry> const& data)
@@ -244,6 +246,7 @@ V8PP_IMPL v8::Local<v8::Object> object_registry<Traits>::wrap_object(v8::Functio
 
 	obj->SetAlignedPointerInInternalField(0, Traits::pointer_id(object));
 	obj->SetAlignedPointerInInternalField(1, this);
+	// obj->SetAlignedPointerInInternalField(2, object);
 
 	v8::Global<v8::Object> pobj(isolate_, obj);
 	pobj.SetWeak(this, [](v8::WeakCallbackInfo<object_registry> const& data)
@@ -268,7 +271,7 @@ object_registry<Traits>::unwrap_object(v8::Local<v8::Value> value)
 	while (value->IsObject())
 	{
 		v8::Local<v8::Object> obj = value.As<v8::Object>();
-		if (obj->InternalFieldCount() == 2)
+		if (obj->InternalFieldCount() >= 2)
 		{
 			object_id id = obj->GetAlignedPointerFromInternalField(0);
 			if (id)

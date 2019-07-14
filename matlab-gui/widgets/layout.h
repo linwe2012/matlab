@@ -47,11 +47,25 @@ public:
 			ribbon->show();
 		}
 
-		void AddWild(QWidget* w, const char* tab_name, const char* group_name) {
+		//TODO: support variadic arguments
+		void AddWild(const FunctionCallbackInfo<Value>& args) {
+			int len = args.Length();
+			Isolate* isolate = args.GetIsolate();
+
+			if (len != 3) {
+				return ArgError(args, "Expected at least 2 arguments");
+			}
+
+			QWidget* qw = static_cast<QWidget*>(
+			args.This()->GetAlignedPointerFromInternalField(0));
+
+			std::string tab_name = v8pp::from_v8<std::string>(isolate, args[1], "");
+			std::string group_name = v8pp::from_v8<std::string>(isolate, args[2], "");
+
 			ribbon->addWidget(
-				tab_name,
-				group_name,
-				w
+				tab_name.c_str(),
+				group_name.c_str(),
+				qw
 			);
 
 			ribbon->show();
