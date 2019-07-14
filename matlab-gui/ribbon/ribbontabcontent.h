@@ -8,6 +8,8 @@
  *
  */
 
+// modified by leon lin to adapt more widgets
+
 #ifndef RIBBONTABCONTENT_H
 #define RIBBONTABCONTENT_H
 
@@ -47,6 +49,10 @@ public:
   /// \param[in] groupName Name of the group
   /// \param[in] button The button
   void addButton(const QString &groupName, QToolButton *button);
+
+  void addWidget(const QString& groupName, QWidget* widget);
+
+  void addLayout(const QString& groupName, QLayout* layout);
 
   /// Remove a button from the specified group.
   /// The group is also removed if it's empty.

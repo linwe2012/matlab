@@ -51,6 +51,10 @@ public:
   /// \param[in] button The button
   void addButton(const QString &tabName, const QString &groupName, QToolButton *button);
 
+  void addWidget(const QString& tabName, const QString& groupName, QWidget* widget);
+
+  void addLayout(const QString& tabName, const QString& groupName, QLayout* layout);
+
   /// Remove a button from the specified group.
   /// Do nothing if the button, group or tab doesn't exist.
   /// The button group and tab are also removed if they become empty due to

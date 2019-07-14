@@ -166,6 +166,68 @@ void Ribbon::addButton(const QString &tabName, const QString &groupName, QToolBu
   }
 }
 
+void Ribbon::addWidget(const QString& tabName, const QString& groupName, QWidget* widget)
+{
+	// Find ribbon tab
+	QWidget* tab = nullptr;
+	for (int i = 0; i < count(); i++)
+	{
+		if (tabText(i).toLower() == tabName.toLower())
+		{
+			tab = QTabWidget::widget(i);
+			break;
+		}
+	}
+
+	if (tab != nullptr)
+	{
+		// Tab found
+		// Add ribbon button
+		RibbonTabContent* ribbonTabContent = static_cast<RibbonTabContent*>(tab);
+		ribbonTabContent->addWidget(groupName, widget);
+	}
+	else
+	{
+		// Tab not found.
+		// Create tab
+		addTab(tabName);
+
+		// Add ribbon button
+		addWidget(tabName, groupName, widget);
+	}
+}
+
+void Ribbon::addLayout(const QString& tabName, const QString& groupName, QLayout* layout)
+{
+	// Find ribbon tab
+	QWidget* tab = nullptr;
+	for (int i = 0; i < count(); i++)
+	{
+		if (tabText(i).toLower() == tabName.toLower())
+		{
+			tab = QTabWidget::widget(i);
+			break;
+		}
+	}
+
+	if (tab != nullptr)
+	{
+		// Tab found
+		// Add ribbon button
+		RibbonTabContent* ribbonTabContent = static_cast<RibbonTabContent*>(tab);
+		ribbonTabContent->addLayout(groupName, layout);
+	}
+	else
+	{
+		// Tab not found.
+		// Create tab
+		addTab(tabName);
+
+		// Add ribbon button
+		addLayout(tabName, groupName, layout);
+	}
+}
+
 void Ribbon::removeButton(const QString &tabName, const QString &groupName, QToolButton *button)
 {
   // Find ribbon tab

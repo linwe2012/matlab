@@ -103,6 +103,13 @@ struct V8Shell::Data {
 	std::string Extension(const char* f) {
 		return fs::path(f).extension().string();
 	}
+	void Print(const FunctionCallbackInfo<Value>& args) {
+		int len = args.Length();
+		for (int i = 0; i < len; ++i) {
+			(*output) << *String::Utf8Value(isolate, args[i]);
+		}
+		(*output) << std::endl;
+	}
 };
 std::map<Isolate*, V8Shell*> V8Shell::Data::shell_map;
 
@@ -214,6 +221,7 @@ void V8Shell::Data::RegisterShell()
 		.set("popCwd", &V8Shell::Data::PopCwd)
 		.set("getDir", &V8Shell::Data::GetDirectory)
 		.set("getExt", &V8Shell::Data::Extension)
+		.set("print", &V8Shell::Data::Print)
 		;
 	auto shell = v8pp::class_<V8Shell::Data>::reference_external(isolate, this);
 	//auto global = isolate->GetCurrentContext()->Global();
@@ -291,6 +299,7 @@ V8Shell::V8Shell(int argc, char* argv[], std::ostream& os, const char* shell_nam
 	d.super = this;
 	d.cwd = fs::current_path().string();
 	d.RegisterShell();
+	d.output = d.error = &os;
 	ReloadInitFile(this);
 
 	d.shell_map.insert({ d.isolate, this });
