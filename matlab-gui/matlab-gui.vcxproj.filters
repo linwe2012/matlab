@@ -38,6 +38,9 @@
     <ClCompile Include="widgets\textedit.cpp">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\object-viewer.cc">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -186,9 +189,6 @@
     <ClInclude Include="..\3rdparty\include\v8pp\utility.hpp">
       <Filter>Header Files\v8pp</Filter>
     </ClInclude>
-    <ClInclude Include="widgets\fileselector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="widgets\widgets.h">
       <Filter>Source Files\widgets</Filter>
     </ClInclude>
@@ -205,6 +205,9 @@
       <Filter>Source Files\widgets</Filter>
     </ClInclude>
     <ClInclude Include="widgets\ribbon-button.h">
+      <Filter>Source Files\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\object-viewer.h">
       <Filter>Source Files\widgets</Filter>
     </ClInclude>
   </ItemGroup>

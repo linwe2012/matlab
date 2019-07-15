@@ -6,11 +6,12 @@
 #include "widgets.h"
 #include "widget-helper.h"
 #include <QFileDialog>
-#include "fileselector.h"
+#include "object-viewer.h"
 #include "layout.h"
 #include "slider.h"
 #include "colorpicker.h"
 #include "checkbox.h"
+#include "dragtool.h"
 
 using namespace v8;
 
@@ -186,8 +187,15 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 		.set("saveAsDialog", &GuiModule::SaveAsDialog)
 		.set("show", &GuiModule::Show)
 		;
+
 	Local<Object> mod = gui.create_object(shell->GetIsolate());
 	gui.unwrap_object(shell->GetIsolate(), mod)->js_self_ = mod;
+
+	target_widgets = new QWidget(main);
+	target_widgets->setObjectName(QString::fromUtf8("toolbar"));
+	main->setCentralWidget(target_widgets);
+
+	
 	Layout::Init(mod, shell);
 
 	ColorPicker::Init(mod, shell);
@@ -195,9 +203,9 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	Button::Init(mod, shell);
 	JSObjVeiwer::Init(mod, shell);
 	CheckBox::Init(mod, shell);
+	DragTool::Init(mod, shell);
 
 	GuiModule& pmod = *gui.unwrap_object(shell->GetIsolate(), mod);
-	
 	
 	shell->RegisterGlobals(
 		{
@@ -207,16 +215,14 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 
 	pmod.image_view = new QGraphicsView(target_widgets);
 	pmod.image_view->setObjectName(QString::fromUtf8("image_view"));
-	pmod.image_view->setGeometry(QRect(20, 50, 421, 321));
+	//pmod.image_view->setGeometry(QRect(20, 50, 421, 321));
 
 	pmod.image_scene = new QGraphicsScene(main);
 
 	pmod.image_view->setScene(pmod.image_scene);
 	// pmod.splitter_lr = new QSplitter(Qt::Horizontal, GetTargetWidget());
 
-	target_widgets = new QWidget(main);
-	target_widgets->setObjectName(QString::fromUtf8("toolbar"));
-	main->setCentralWidget(target_widgets);
+	
 	// QMetaObject::connectSlotsByName(main);
 
     global = gui.unwrap_object(shell->GetIsolate(), mod);

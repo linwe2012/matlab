@@ -16,10 +16,18 @@ public:
 		RibbonProxy() {
 			ribbon = new Ribbon;
 			ribbon->setParent(GetTargetWidget());
-			ribbon->setGeometry(QRect(0, 0, 1000, 120));
+			ribbon->setGeometry(QRect(0, 0, 1200, 120));
+			target = GetTargetWidget();
 		}
+		RibbonProxy(QWidget* widgets) {
+			ribbon = new Ribbon;
+			ribbon->setParent(widgets);
+			ribbon->setGeometry(QRect(0, 0, 1200, 120));
+			target = widgets;
+		}
+
 		void Add(Button* n, const char* tab_name, const char* group_name) {
-			ribbon->setParent(GetTargetWidget());
+			ribbon->setParent(target);
 			ribbon->addButton(
 				tab_name,
 				group_name,
@@ -29,6 +37,7 @@ public:
 		}
 
 		void AddSlider(Slider* widget, const char* tab_name, const char* group_name) {
+			widget->setParent(target);
 			ribbon->addLayout(
 				tab_name,
 				group_name,
@@ -76,6 +85,7 @@ public:
 			if (qw == nullptr) {
 				return;
 			}
+			qw->setParent(target);
 			ribbon->addWidget(
 				tab_name.c_str(),
 				group_name.c_str(),
@@ -98,6 +108,7 @@ public:
 		}
 
 		Ribbon* ribbon;
+		QWidget* target;
 	};
 
 	struct Window {
@@ -108,7 +119,7 @@ public:
 			js_self_ = args.GetReturnValue().Get()->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 			js_self_->Set(
 				MakeStr(isolate, "ribbon"),
-				v8pp::class_<RibbonProxy>::create_object(isolate)
+				v8pp::class_<RibbonProxy>::create_object(isolate, central_)
 			);
 		}
 
@@ -140,6 +151,8 @@ public:
 		v8pp::class_<RibbonProxy> ribbon(isolate);
 		
 		ribbon
+			.ctor<>()
+			.ctor<QWidget*>()
 			.set("add", &RibbonProxy::Add)
 			.set("addSlider", &RibbonProxy::AddSlider)
 			.set("addWild", &RibbonProxy::AddWild)
@@ -156,7 +169,8 @@ public:
 			.ctor<const FunctionCallbackInfo<Value>&>()
 			.set("hide", &Window::Hide)
 			.set("show", &Window::Show)
-			.set("addWild", &Window::AddWild);
+			.set("addWild", &Window::AddWild)
+			;
 
 		mod->Set(
 			MakeStr(isolate, "Window"),

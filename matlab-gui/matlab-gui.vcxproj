@@ -130,6 +130,7 @@
     <ClCompile Include="widgets\checkbox.cc" />
     <ClCompile Include="widgets\colorpicker.cc" />
     <ClCompile Include="widgets\dragtool.cc" />
+    <ClCompile Include="widgets\object-viewer.cc" />
     <ClCompile Include="widgets\slider.cc" />
     <ClCompile Include="widgets\textedit.cpp" />
     <ClCompile Include="widgets\widgets.cc" />
@@ -188,7 +189,7 @@
     <QtMoc Include="ribbon\ribbon.h" />
     <QtMoc Include="ribbon\ribbonbuttongroup.h" />
     <QtMoc Include="ribbon\ribbontabcontent.h" />
-    <ClInclude Include="widgets\fileselector.h">
+    <ClInclude Include="widgets\object-viewer.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
     </ClInclude>

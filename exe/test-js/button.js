@@ -308,14 +308,25 @@ btn_batchjob = new gui.Button ({
 })
 
 
+btn_open_devtools = new gui.Button({
+    icon: ':/icons/edit/console',
+    text: 'Open DevTool',
+    onclick() {
+        gui.Inspector.show()
+    }
+})
+
 vw_global = new gui.ObjectViewer();
 btn_refresh_obj = new gui.Button({
     icon: ':/icons/refresh_doc',
     text: 'Refresh',
     onclick: ()=> {
-        vw_global = new gui.ObjectViewer();
+        vw_global.refreshAll();
     }
 })
+
+
+
 
 
 function CheckAns() {
@@ -396,6 +407,7 @@ ckbx_setting_rec_script = new gui.Checkbox({
 
 
 
+
 // gui.ribbon.add(target button, Tab name, group name)
 
 gui.ribbon.add(btn_read, 'Project', 'Files');
@@ -406,9 +418,6 @@ gui.ribbon.add(btn_save_jpg, 'Project', 'Save as');
 gui.ribbon.add(btn_save_png, 'Project', 'Save as');
 gui.ribbon.add(btn_save_bmp, 'Project', 'Save as');
 gui.ribbon.add(btn_save_tif, 'Project', 'Save as');
-
-gui.ribbon.add(btn_refresh_obj, 'Project', 'Object Viewer');
-
 
 gui.ribbon.add(btn_undo, 'Edit', 'Navigate');
 gui.ribbon.add(btn_redo, 'Edit', 'Navigate');
@@ -423,10 +432,10 @@ gui.ribbon.add(btn_face, 'Edit', 'Enhance');
 
 gui.ribbon.addWild(ckbx_setting_rec_cmd, 'Settings', 'Commands')
 gui.ribbon.addWild(ckbx_setting_rec_script, 'Settings', 'Commands')
-
+gui.ribbon.add(btn_open_devtools, 'Settings', 'Developer')
 
 gui['Inspector'] = new gui.Window;
-//shell.print(gui.Inspector)
 gui.Inspector.addWild(vw_global);
-gui.Inspector.show()
-gui.show()
+//gui.Inspector.add(btn_refresh_obj, 'Project', 'Object Viewer')
+gui.Inspector.ribbon.add(btn_refresh_obj, 'Inspector', 'Refresh All')
+eval(shell.readtxt('test-js/extensions/filters.js'))
