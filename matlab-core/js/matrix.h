@@ -10,10 +10,12 @@ class Matrix {
 public:
 	Matrix() {}
 
+
 	Matrix(cv::Mat m, V8Shell* shell)
 		:matrix(m), shell_(shell)
 	{}
 
+	
 	void v8_resize(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_read(const v8::FunctionCallbackInfo<v8::Value>& args);
 	void v8_write(const v8::FunctionCallbackInfo<v8::Value>& args); // Output pic, to file `output.png`. Just for test.
@@ -30,6 +32,8 @@ public:
 	cv::Vec3b v8_getColor(const v8::FunctionCallbackInfo<v8::Value>& args);
 	int v8_getRows(const v8::FunctionCallbackInfo<v8::Value>& args);
 	int v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+	void fill(std::vector<std::vector<float>>);
 
 	void resize(const std::vector<int>& dims);
 	void openFile(Isolate* isolate, const char* filename);

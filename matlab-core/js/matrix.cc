@@ -40,6 +40,7 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("setColor", &Matrix::v8_clone)
 		.set("getRows", &Matrix::v8_clone)
 		.set("getCols", &Matrix::v8_clone)
+		.set("fill", &Matrix::fill)
 		;
 
 	shell->RegisterClasses(
@@ -210,16 +211,17 @@ int Matrix::v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args)
 	return_this(args);
 }
 
+void Matrix::fill(std::vector<std::vector<float>> mat)
+{
+	matrix = cv::Mat(mat.size(), mat[0].size(), CV_32FC1);
+
+	for (int i = 0; i < matrix.rows; ++i)
+		for (int j = 0; j < matrix.cols; ++j)
+			matrix.at<float>(i, j) = mat.at(i).at(j);
+}
+
 void Matrix::resize(const std::vector<int>& dims)
 {
-	/*
-	std::cerr << "resize called: [";
-	for (auto d : dims) {
-		std::cout << d << ", ";
-	}
-	std::cout << "]" << std::endl;
-	*/
-
 	cv::Mat temp = matrix.clone();
 	cv::resize(temp, matrix, cv::Size(temp.cols * dims.at(0), temp.rows * dims.at(1)), 0, 0, cv::INTER_LINEAR);
 }

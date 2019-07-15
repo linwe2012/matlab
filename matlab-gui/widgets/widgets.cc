@@ -10,6 +10,8 @@
 #include "layout.h"
 #include "slider.h"
 #include "colorpicker.h"
+#include "checkbox.h"
+
 using namespace v8;
 
 
@@ -173,6 +175,7 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	gui
 		.set("display", &GuiModule::Display)
 		.set("fileDialog", &GuiModule::FileDiaglog)
+		.set("saveAsDialog", &GuiModule::SaveAsDialog)
 		;
 	Local<Object> mod = gui.create_object(shell->GetIsolate());
 	gui.unwrap_object(shell->GetIsolate(), mod)->js_self_ = mod;
@@ -182,6 +185,8 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	Slider::Init(mod, shell);
 	Button::Init(mod, shell);
 	JSObjVeiwer::Init(mod, shell);
+	CheckBox::Init(mod, shell);
+
 	GuiModule& pmod = *gui.unwrap_object(shell->GetIsolate(), mod);
 	
 	

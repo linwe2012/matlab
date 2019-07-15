@@ -78,6 +78,47 @@ btn_gray = new gui.Button(
     }
 );
 
+function Equalize() {
+    if(!CheckAns()) return;
+    if(internal.enable_cmd_stk) {
+        internal.add_cmd({
+            data: ans.clone(),
+            undo(){ ans = this.data; RefreshImg(ans); shell.print('[undo]: equalize')},
+            redo: Equalize
+        }, 'Equalize()')
+    }
+    ans.equalizeHist();
+    RefreshImg(ans);
+}
+
+btn_equalize = new gui.Button(
+    {
+        icon: ':/icons/edit/histogram',
+        text: 'Equalize',
+        onclick: Equalize
+    }
+);
+
+function DetectFace() {
+    if(!CheckAns()) return;
+    if(internal.enable_cmd_stk) {
+        internal.add_cmd({
+            data: ans.clone(),
+            undo(){ ans = this.data; RefreshImg(ans); shell.print('[undo]: equalize')},
+            redo: DetectFace
+        }, 'DetectFace()')
+    }
+    ans.face();
+    RefreshImg(ans);
+}
+
+btn_face = new gui.Button({
+    icon: ':/icons/edit/face',
+    text: 'Detect Face',
+    onclick: DetectFace
+});
+
+
 function WriteImage(type) {
 
     if(!CheckAns()) return;
@@ -91,7 +132,21 @@ function WriteImage(type) {
             redo(){WriteImage(this.data.type)}
         }, 'WriteImage("',type, '")')
     }
-    ans.write('output' + '.' + type)
+    gui.saveAsDialog({
+        baseDir: '.',
+        nameFilter: 'Images(*.' + type+')',
+        title: 'Save As',
+        name: shell.replaceExt(ans['filename'] || 'UserImage.png', type),
+        callback (arr) {
+            if(arr.length > 0) {
+                ans.read(arr[0])
+                ans['filename'] = arr[0]
+                ans.write(arr[0])
+            }
+        }
+    })
+
+    // ans.write('output' + '.' + type)
 }
 
 btn_save_png = new gui.Button({
@@ -247,23 +302,24 @@ sld_rotate = new gui.Slider({
         }, 'RotateCallback(' + ans.data_begin_rotate + ', true)')
     }
 })
-/*
+
+
+
 ckbx_setting_rec_cmd = new gui.Checkbox({
     text: 'Record Command',
     onclick: (boolean) => {
         internal.enable_cmd_stk = boolean
     }
 })
-
+/*
 ckbx_setting_rec_script = new gui.Checkbox({
     text: 'Record Script',
     onclick: (boolean) => {
         internal.enable_script_stk = boolean
     }
 })
-gui.ribbon.addWild(ckbx_setting, 'Settings', 'Commands')
-gui.ribbon.addWild(ckbx_setting, 'Settings', 'Commands')
 */
+
 
 // gui.ribbon.add(target button, Tab name, group name)
 
@@ -280,4 +336,16 @@ gui.ribbon.add(btn_redo, 'Edit', 'Navigate');
 gui.ribbon.add(btn_gray, 'Edit', 'Mono');
 gui.ribbon.add(btn_bin, 'Edit', 'Mono');
 
-gui.ribbon.addSlider(sld_rotate, 'Edit', 'Rotate');
+gui.ribbon.addSlider(sld_rotate, 'Edit', 'Transform');
+
+gui.ribbon.add(btn_equalize, 'Edit', 'Enhance');
+gui.ribbon.add(btn_face, 'Edit', 'Enhance');
+
+gui.ribbon.addWild(ckbx_setting_rec_cmd, 'Settings', 'Commands')
+
+gui['Inspector'] = new gui.Window;
+shell.print(gui.Inspector)
+// gui.Inspector.addWild(vw_global);
+
+// gui.add('WindowName', widget)
+//gui.ribbon.addWild(ckbx_setting_rec_script, 'Settings', 'Commands')

@@ -33,7 +33,7 @@ CheckBox::CheckBox(const FunctionCallbackInfo<Value>& args)
 
 void CheckBox::ClickCallback() {
   js_self_ = v8pp::class_<CheckBox>::find_object(isolate_, this);
-  Local<Integer> arg1 = Integer::New(isolate_, int(this->isChecked()));
+  Local<Boolean> arg1 = Boolean::New(isolate_, int(this->isChecked()));
   Local<Value> argv[] = { arg1 };
   onclick_ = Local<Function>::Cast(js_self_->Get(MakeStr(isolate_, "onclick_func")));
   onclick_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 1, argv);
@@ -51,5 +51,5 @@ void CheckBox::Init(Local<Object> mod, V8Shell* shell)
     .set("text", &CheckBox::text_)
     .set("onclick", &CheckBox::onclick_);
 
-  mod->Set(MakeStr(shell->GetIsolate(), "Button"), self_class_->js_function_template()->GetFunction(shell->GetIsolate()->GetCurrentContext()).ToLocalChecked());
+  mod->Set(MakeStr(shell->GetIsolate(), "Checkbox"), self_class_->js_function_template()->GetFunction(shell->GetIsolate()->GetCurrentContext()).ToLocalChecked());
 }
