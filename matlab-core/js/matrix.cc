@@ -220,6 +220,7 @@ void Matrix::fill(std::vector<std::vector<float>> mat)
 			matrix.at<float>(i, j) = mat.at(i).at(j);
 }
 
+
 void Matrix::resize(const std::vector<int>& dims)
 {
 	cv::Mat temp = matrix.clone();

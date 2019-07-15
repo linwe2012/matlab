@@ -29,5 +29,8 @@
         <file alias="face">Resources/icons/edit/icons8-face-id-48.png</file>
         <file alias="histogram">Resources/icons/edit/icons8-normal-distribution-histogram-40.png</file>
         <file alias="batch">Resources/icons/edit/icons8-stack-of-money-64.png</file>
+        <file alias="console">Resources/icons/edit/icons8-console-80.png</file>
+        <file alias="blur">Resources/icons/edit/icons8-blur-40.png</file>
+        <file alias="sharpen">Resources/icons/edit/icons8-chisel-tip-marker-40.png</file>
     </qresource>
 </RCC>

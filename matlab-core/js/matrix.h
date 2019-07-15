@@ -34,7 +34,6 @@ public:
 	int v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 	void fill(std::vector<std::vector<float>>);
-
 	void resize(const std::vector<int>& dims);
 	void openFile(Isolate* isolate, const char* filename);
 	void write(Isolate* isolate, const char* filename);
