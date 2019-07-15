@@ -44,13 +44,15 @@ public:
 	void equalizeHist();
 	void linear(double alpha, int beta);
 	void face();
+	void divScale(double);
+
 	void conv(cv::Mat& ker); /*example:
 							 * cv::Mat kernel = (cv::Mat_<char>(3, 3) << 0, -1, 0,
 							 *  										 -1, 5, -1,
 							 *  										 0, -1, 0);
 							 * conv(kernel);
 							 */
-	void setColor(int x, int y, cv::Vec3b& color); /*example:
+	void setColor(int x, int y, std::vector<int> color); /*example:
 												   * cv::Vec3b foo;
 												   * foo[0] = 255;
 												   * foo[1] = 0;

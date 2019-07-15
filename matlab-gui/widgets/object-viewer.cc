@@ -19,7 +19,7 @@ JSObjVeiwer::JSObjVeiwer(const FunctionCallbackInfo<Value>& args)
 	model_->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Name") << QStringLiteral("Data"));
 	isolate = args.GetIsolate();
 	DisplayGlobal();
-	this->setGeometry(QRect(850, 120, 250, 800));
+	this->setGeometry(QRect(700, 120, 450, 800));
 	this->show();
 }
 
@@ -55,5 +55,7 @@ void JSObjVeiwer::RefreshAll()
 	//model_ = nullptr;
 	displayer_ = nullptr;
 	dispater_ = nullptr;
+	model_->clear();
+	model_->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Name") << QStringLiteral("Data"));
 	DisplayGlobal();
 }

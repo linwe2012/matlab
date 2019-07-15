@@ -50,7 +50,7 @@ btn_bin = new gui.Button(
             if(!CheckAns()) return;
             var s = {
                 undo(){
-                    ans = this.data;
+                    ans = this.data.clone();
                     RefreshImg(ans);
                 },
                 data: ans.clone(),
@@ -77,7 +77,7 @@ btn_gray = new gui.Button(
             if(!CheckAns()) return;
             internal.add_cmd({
                 data: ans.clone(),
-                undo(){ ans = this.data; RefreshImg(ans); shell.print('[undo]: to gray')},
+                undo(){ ans = this.data.clone(); RefreshImg(ans); shell.print('[undo]: to gray')},
                 redo: ToGray
             }, 'ToGray()')
             ToGray()
@@ -90,7 +90,7 @@ function Equalize() {
     if(internal.enable_cmd_stk) {
         internal.add_cmd({
             data: ans.clone(),
-            undo(){ ans = this.data; RefreshImg(ans); shell.print('[undo]: equalize')},
+            undo(){ ans = this.data.clone(); RefreshImg(ans); shell.print('[undo]: equalize')},
             redo: Equalize
         }, 'Equalize()')
     }
@@ -111,7 +111,7 @@ function DetectFace() {
     if(internal.enable_cmd_stk) {
         internal.add_cmd({
             data: ans.clone(),
-            undo(){ ans = this.data; RefreshImg(ans); shell.print('[undo]: equalize')},
+            undo(){ ans = this.data.clone(); RefreshImg(ans); shell.print('[undo]: equalize')},
             redo: DetectFace
         }, 'DetectFace()')
     }
@@ -436,6 +436,13 @@ gui.ribbon.add(btn_open_devtools, 'Settings', 'Developer')
 
 gui['Inspector'] = new gui.Window;
 gui.Inspector.addWild(vw_global);
-//gui.Inspector.add(btn_refresh_obj, 'Project', 'Object Viewer')
+gui.Inspector.addWild(new gui.TextEdit({
+    text: 'Shell',
+    onenter(txt) {
+        eval(txt)
+    }
+}));
+
 gui.Inspector.ribbon.add(btn_refresh_obj, 'Inspector', 'Refresh All')
 eval(shell.readtxt('test-js/extensions/filters.js'))
+eval(shell.readtxt('test-js/extensions/painter.js'))
