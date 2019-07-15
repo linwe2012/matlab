@@ -41,6 +41,7 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("getRows", &Matrix::v8_clone)
 		.set("getCols", &Matrix::v8_clone)
 		.set("fill", &Matrix::fill)
+		.set("conv", &Matrix::v8_conv)
 		;
 
 	shell->RegisterClasses(
@@ -209,6 +210,11 @@ int Matrix::v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	return getCols();
 	return_this(args);
+}
+
+void Matrix::v8_conv(Matrix* mat)
+{
+	conv(mat->matrix);
 }
 
 void Matrix::fill(std::vector<std::vector<float>> mat)

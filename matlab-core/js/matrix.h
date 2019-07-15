@@ -32,6 +32,7 @@ public:
 	cv::Vec3b v8_getColor(const v8::FunctionCallbackInfo<v8::Value>& args);
 	int v8_getRows(const v8::FunctionCallbackInfo<v8::Value>& args);
 	int v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args);
+	void v8_conv(Matrix* mat);
 
 	void fill(std::vector<std::vector<float>>);
 	void resize(const std::vector<int>& dims);
