@@ -32,6 +32,9 @@
     <ClCompile Include="widgets\checkbox.cc">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\dragtool.cc">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -93,6 +96,9 @@
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\checkbox.h">
+      <Filter>Source Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\dragtool.h">
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
   </ItemGroup>
