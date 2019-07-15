@@ -11,11 +11,18 @@ internal = {
         if(this.enable_cmd_stk) {
             if(this.command_stack_cursor < this.command_stack.length) {
                 this.command_stack[this.command_stack_cursor] = obj
-                this.command_script_stack[this.command_stack_cursor] = src
+                this.command_script_stack[this.command_stack_cursor] = {
+                    src: src,
+                    checked: this.enable_script_stk
+                }
             }
             else {
                 this.command_stack.push(obj);
-                this.command_script_stack.push(src);
+                this.command_script_stack.push({
+                    src: src,
+                    checked: this.enable_script_stk
+                });
+                shell.print(this.command_script_stack[this.command_stack_cursor].src)
             }
             
             ++this.command_stack_cursor;
@@ -234,6 +241,72 @@ btn_read = new gui.Button({
     }
 })
 
+btn_outputScript = new gui.Button ({
+    icon: ':/icons/filetype/js',
+    text: 'Save Script',
+    onclick() {
+        gui.saveAsDialog({
+            baseDir: '.',
+            nameFilter: '*.js',
+            title: 'Save Script As...',
+            name: 'script.js',
+            callback (arr) {
+                if(arr.length > 0) {
+                    var _text = '';
+                    for(var src of internal.command_script_stack) {
+                        shell.print(src.src, ':', src.checked)
+                        if(src.checked) {
+                            _text = _text + src.src + ';\n';
+                        }
+                    }
+                    shell.writetxt(arr[0], _text);
+                }
+            }
+        })
+    }
+})
+
+btn_batchjob = new gui.Button ({
+    icon: ':/icons/edit/batch',
+    text: 'Batch Processing',
+    onclick() {
+        gui.fileDialog({
+            baseDir: '.',
+            nameFilter: '*.js',
+            title: 'Select a script...',
+            callback (arr) {
+                if(!(arr.length > 0)) {
+                   return
+                }
+                var src = shell.readtxt(arr[0]);
+                internal.enable_cmd_stk = false;
+
+                gui.fileDialog({
+                    baseDir: '.',
+                    nameFilter: 'Images(*.png *.jpg *.jpeg *.bmp *.tif)',
+                    title: 'Select images working on...',
+                    multi: true,
+                    callback (farr) {
+                        if(ans == null) {
+                            ans = new Matrix
+                        }
+                        shell.print(farr)
+                        for(var file of farr) {
+                            if(!file) {
+                                continue
+                            }
+
+                            ans.read(file);
+                            eval(src)
+                            ans.write('./batch/' + shell.getFilename(file))
+                        }
+                    }
+                })
+            }
+        })
+    }
+})
+
 
 vw_global = new gui.ObjectViewer();
 btn_refresh_obj = new gui.Button({
@@ -299,36 +372,43 @@ sld_rotate = new gui.Slider({
             },
             redo(){RotateCallback(this.data.redo, true); sld_rotate.setValue(this.data.redo)},
             undo(){RotateCallback(this.data.undo, true); sld_rotate.setValue(this.data.undo); shell.print('[undo]', this.data.undo)}
-        }, 'RotateCallback(' + ans.data_begin_rotate + ', true)')
+        }, 'RotateCallback(' + ans.data_rotate + ', true)')
     }
 })
 
 
 
 ckbx_setting_rec_cmd = new gui.Checkbox({
+    init_val: internal.enable_cmd_stk,
     text: 'Record Command',
     onclick: (boolean) => {
         internal.enable_cmd_stk = boolean
     }
 })
-/*
+
 ckbx_setting_rec_script = new gui.Checkbox({
+    init_val: internal.enable_script_stk,
     text: 'Record Script',
     onclick: (boolean) => {
         internal.enable_script_stk = boolean
     }
 })
-*/
+
 
 
 // gui.ribbon.add(target button, Tab name, group name)
 
 gui.ribbon.add(btn_read, 'Project', 'Files');
+gui.ribbon.add(btn_outputScript, 'Project', 'Files');
+gui.ribbon.add(btn_batchjob, 'Project', 'Files');
+
 gui.ribbon.add(btn_save_jpg, 'Project', 'Save as');
 gui.ribbon.add(btn_save_png, 'Project', 'Save as');
 gui.ribbon.add(btn_save_bmp, 'Project', 'Save as');
 gui.ribbon.add(btn_save_tif, 'Project', 'Save as');
+
 gui.ribbon.add(btn_refresh_obj, 'Project', 'Object Viewer');
+
 
 gui.ribbon.add(btn_undo, 'Edit', 'Navigate');
 gui.ribbon.add(btn_redo, 'Edit', 'Navigate');
@@ -342,10 +422,11 @@ gui.ribbon.add(btn_equalize, 'Edit', 'Enhance');
 gui.ribbon.add(btn_face, 'Edit', 'Enhance');
 
 gui.ribbon.addWild(ckbx_setting_rec_cmd, 'Settings', 'Commands')
+gui.ribbon.addWild(ckbx_setting_rec_script, 'Settings', 'Commands')
+
 
 gui['Inspector'] = new gui.Window;
 shell.print(gui.Inspector)
 // gui.Inspector.addWild(vw_global);
 
 // gui.add('WindowName', widget)
-//gui.ribbon.addWild(ckbx_setting_rec_script, 'Settings', 'Commands')

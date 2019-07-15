@@ -10,6 +10,8 @@ CheckBox::CheckBox(const FunctionCallbackInfo<Value>& args)
 
   GET(std::string, text);
   GET(Local<Function>, onclick);
+  GET_IF(bool, init_val, false);
+
 
   this->setText(text.c_str());
   auto sz = GetCurrentLayout().width();
@@ -20,7 +22,7 @@ CheckBox::CheckBox(const FunctionCallbackInfo<Value>& args)
   text_ = text;
   onclick_ = onclick;
 
-
+  setChecked(init_val);
   connect(this, SIGNAL(clicked(bool)), this, SLOT(ClickCallback()));
 
   isolate_ = isolate;

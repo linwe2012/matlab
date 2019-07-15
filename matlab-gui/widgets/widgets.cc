@@ -110,11 +110,15 @@ struct GuiModule {
 		GET(Local<Function>, callback);
 		GET(std::string, nameFilter);
 		GET(std::string, title);
-
+		GET_IF(bool, multi, false);
+	
 		fileDialog->setWindowTitle(title.c_str());
 		fileDialog->setDirectory(baseDir.c_str());
 		fileDialog->setNameFilter(nameFilter.c_str());
 		fileDialog->setViewMode(QFileDialog::Detail);
+		if (multi) {
+			fileDialog->setFileMode(QFileDialog::ExistingFiles);
+		}
 		QStringList fileNames;
 		if (fileDialog->exec())
 		{
@@ -124,6 +128,7 @@ struct GuiModule {
 		int i = 0;
 		for (auto f : fileNames) {
 			arr->Set(i, MakeStr(isolate, f.toUtf8().constData()));
+			++i;
 		}
 		Local<Value> argv[] = { arr };
 		int argc = 1;

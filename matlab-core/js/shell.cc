@@ -70,6 +70,11 @@ struct V8Shell::Data {
 
 	Local<String> ReadFileTxt(const char* name);
 
+	void WriteFileTxt(const char* file, const char* what) {
+		std::ofstream os(file);
+		os << what;
+	}
+
 	void ChangeDirectory(const char* str);
 
 	Local<Boolean> FileExist(const char* str);
@@ -114,6 +119,10 @@ struct V8Shell::Data {
 		fs::path path(c);
 		path.replace_extension(ext);
 		return path.string();
+	}
+
+	std::string GetFileName(const char* s) {
+		return fs::path(s).filename().string();
 	}
 };
 std::map<Isolate*, V8Shell*> V8Shell::Data::shell_map;
@@ -218,6 +227,8 @@ void V8Shell::Data::RegisterShell()
 		.set("cwd", &V8Shell::Data::cwd)
 		// functions
 		.set("readtxt", &V8Shell::Data::ReadFileTxt)
+		.set("writetxt", &V8Shell::Data::WriteFileTxt)
+		.set("getFilename", &V8Shell::Data::GetFileName)
 		.set("exists", &V8Shell::Data::FileExist)
 		.set("cd", &V8Shell::Data::ChangeDirectory)
 		.set("exit", &V8Shell::Data::SetExit)

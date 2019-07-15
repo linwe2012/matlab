@@ -19,6 +19,7 @@
         <file alias="png">Resources/icons/filetype/png.png</file>
         <file alias="tif">Resources/icons/filetype/tif.png</file>
         <file alias="jpg">Resources/icons/filetype/jpg.png</file>
+        <file alias="js">Resources/icons/filetype/js.png</file>
     </qresource>
     <qresource prefix="/icons/edit">
         <file alias="bin">Resources/icons/edit/icons8-binary-file-50.png</file>
@@ -27,5 +28,6 @@
         <file alias="undo">Resources/icons/edit/icons8-undo-64.png</file>
         <file alias="face">Resources/icons/edit/icons8-face-id-48.png</file>
         <file alias="histogram">Resources/icons/edit/icons8-normal-distribution-histogram-40.png</file>
+        <file alias="batch">Resources/icons/edit/icons8-stack-of-money-64.png</file>
     </qresource>
 </RCC>
