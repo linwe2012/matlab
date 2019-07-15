@@ -125,7 +125,7 @@ public:
 			Local<Object> obj =  args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 			QWidget* widget = static_cast<QWidget*>(obj->GetAlignedPointerFromInternalField(0));
 			widget->setParent(central_);
-			widget->show();
+			//widget->show();
 		}
 
 		static std::map<std::string, Window*> windows_;
@@ -160,7 +160,7 @@ public:
 
 		mod->Set(
 			MakeStr(isolate, "Window"),
-			window.class_function_template()->GetFunction(isolate->GetCurrentContext()).ToLocalChecked()
+			window.js_function_template()->GetFunction(isolate->GetCurrentContext()).ToLocalChecked()
 		);
 	}
 

@@ -426,7 +426,6 @@ gui.ribbon.addWild(ckbx_setting_rec_script, 'Settings', 'Commands')
 
 
 gui['Inspector'] = new gui.Window;
-shell.print(gui.Inspector)
-// gui.Inspector.addWild(vw_global);
-
-// gui.add('WindowName', widget)
+//shell.print(gui.Inspector)
+gui.Inspector.addWild(vw_global);
+gui.Inspector.show()
