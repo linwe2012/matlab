@@ -114,7 +114,7 @@ public:
 	struct Window {
 		Window(const FunctionCallbackInfo<Value>& args) {
 			central_ = new QWidget;
-			
+			central_->setGeometry(QRect{ 0, 0, 1180, 900 });
 			Isolate* isolate = args.GetIsolate();
 			js_self_ = args.GetReturnValue().Get()->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 			js_self_->Set(

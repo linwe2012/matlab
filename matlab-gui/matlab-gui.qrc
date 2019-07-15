@@ -32,5 +32,7 @@
         <file alias="console">Resources/icons/edit/icons8-console-80.png</file>
         <file alias="blur">Resources/icons/edit/icons8-blur-40.png</file>
         <file alias="sharpen">Resources/icons/edit/icons8-chisel-tip-marker-40.png</file>
+        <file alias="radio-sig">Resources/icons/edit/icons8-rfid-signal-48.png</file>
+        <file alias="box">Resources/icons/edit/icons8-empty-box-40.png</file>
     </qresource>
 </RCC>

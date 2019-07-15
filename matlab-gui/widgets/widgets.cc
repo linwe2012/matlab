@@ -12,6 +12,7 @@
 #include "colorpicker.h"
 #include "checkbox.h"
 #include "dragtool.h"
+#include "textedit.h"
 
 using namespace v8;
 
@@ -204,6 +205,7 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	JSObjVeiwer::Init(mod, shell);
 	CheckBox::Init(mod, shell);
 	DragTool::Init(mod, shell);
+	TextEdit::Init(mod, shell);
 
 	GuiModule& pmod = *gui.unwrap_object(shell->GetIsolate(), mod);
 	

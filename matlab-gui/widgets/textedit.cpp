@@ -15,7 +15,7 @@ TextEdit::TextEdit(const FunctionCallbackInfo<Value>& args)
   auto sz = GetCurrentLayout().width();
   sz += this->size().width() + 20;
   GetCurrentLayout().setWidth(sz);
-  this->setGeometry(QRect(sz, 530, 160, 22));
+  this->setGeometry(QRect(20, 180, 500, 600));
   this->append(">>");
   this->moveCursor(QTextCursor::End);
   this->installEventFilter(this);

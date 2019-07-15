@@ -36,12 +36,13 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("linear", &Matrix::v8_linear)
 		.set("face", &Matrix::v8_face)
 		.set("clone", &Matrix::v8_clone)
-		.set("getColor", &Matrix::v8_clone)
-		.set("setColor", &Matrix::v8_clone)
+		.set("getColor", &Matrix::v8_getColor)
+		.set("setColor", &Matrix::setColor)
 		.set("getRows", &Matrix::v8_clone)
 		.set("getCols", &Matrix::v8_clone)
 		.set("fill", &Matrix::fill)
 		.set("conv", &Matrix::v8_conv)
+		.set("divScale", &Matrix::divScale)
 		;
 
 	shell->RegisterClasses(
@@ -311,8 +312,8 @@ void Matrix::rotate(const double degree)
 void Matrix::togray()
 {	
 	if (matrix.type() == CV_8UC3) {
-		cv::Mat temp = matrix.clone();
-		cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
+		//cv::Mat temp = matrix.clone();
+		cv::cvtColor(matrix, matrix, cv::COLOR_BGR2GRAY);
 		std::cout << "Done: convert to gray picture." << std::endl;
 	} else {
 		std::cout << "Err: the image is already a gray one." << std::endl;
@@ -324,22 +325,24 @@ void Matrix::tobin()
 	if (matrix.type() != CV_8UC1) {
 		togray();
 	}
-	cv::Mat temp = matrix.clone();
-	cv::threshold(temp, matrix, 50, 150.0, 8);
+
+	cv::threshold(matrix, matrix, 50, 150.0, 8);
 
 	std::cout << "Done: convert to binary picture." << std::endl;
 }
 
 void Matrix::equalizeHist()
 {
-	cv::Mat RGB[3];
 	cv::Mat temp = matrix.clone();
+	int d = matrix.channels();
+	std::vector<cv::Mat>  RGB;
+	RGB.resize(d);
+	cv::split(temp, RGB.data());
 
-	cv::split(temp, RGB);
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < d; ++i) {
 		cv::equalizeHist(RGB[i], RGB[i]);
 	}
-	cv::merge(RGB, 3, matrix);
+	cv::merge(RGB.data(), d, matrix);
 
 	std::cout << "Done: equalize." << std::endl;
 }
@@ -367,13 +370,18 @@ void Matrix::face()
 	}
 }
 
+void Matrix::divScale(double i)
+{
+	cv::divide(i, matrix, matrix);
+}
+
 void Matrix::conv(cv::Mat& ker)
 {
 	cv::Mat temp = matrix.clone();
 	cv::filter2D(temp, matrix, -1, ker);
 }
 
-void Matrix::setColor(int x, int y, cv::Vec3b& color)
+void Matrix::setColor(int x, int y, std::vector<int> color)
 {
 	matrix.at<cv::Vec3b>(x, y)[0] = color[0]; // B
 	matrix.at<cv::Vec3b>(x, y)[1] = color[1]; // G

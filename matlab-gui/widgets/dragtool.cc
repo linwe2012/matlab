@@ -46,6 +46,7 @@ bool DragTool::eventFilter(QObject* target, QEvent* event)
   if (this->isChecked()&&target== GetImageView())
   {
     js_self_ = v8pp::class_<DragTool>::find_object(isolate_, this);
+	
     switch (event->type()) 
     {
     case QEvent::MouseButtonPress:
