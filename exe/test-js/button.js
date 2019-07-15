@@ -429,3 +429,4 @@ gui['Inspector'] = new gui.Window;
 //shell.print(gui.Inspector)
 gui.Inspector.addWild(vw_global);
 gui.Inspector.show()
+gui.show()

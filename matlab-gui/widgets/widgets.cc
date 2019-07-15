@@ -166,6 +166,10 @@ struct GuiModule {
       delete fileDialog;
     }
 
+	void Show() {
+		target_widgets->show();
+	}
+
 	QGraphicsView* image_view;
 	QGraphicsScene* image_scene;
 	Local<Object> js_self_;
@@ -180,6 +184,7 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 		.set("display", &GuiModule::Display)
 		.set("fileDialog", &GuiModule::FileDiaglog)
 		.set("saveAsDialog", &GuiModule::SaveAsDialog)
+		.set("show", &GuiModule::Show)
 		;
 	Local<Object> mod = gui.create_object(shell->GetIsolate());
 	gui.unwrap_object(shell->GetIsolate(), mod)->js_self_ = mod;
