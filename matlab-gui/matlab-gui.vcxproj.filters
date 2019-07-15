@@ -35,6 +35,9 @@
     <ClCompile Include="widgets\dragtool.cc">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\textedit.cpp">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
     <ClCompile Include="widgets\object-viewer.cc">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
@@ -102,6 +105,9 @@
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\dragtool.h">
+      <Filter>Source Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\textedit.h">
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
   </ItemGroup>

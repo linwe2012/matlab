@@ -132,6 +132,7 @@
     <ClCompile Include="widgets\dragtool.cc" />
     <ClCompile Include="widgets\object-viewer.cc" />
     <ClCompile Include="widgets\slider.cc" />
+    <ClCompile Include="widgets\textedit.cpp" />
     <ClCompile Include="widgets\widgets.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +198,7 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
     </ClInclude>
+    <QtMoc Include="widgets\textedit.h" />
     <ClInclude Include="widgets\widget-helper.h" />
     <ClInclude Include="widgets\widgets-registery.h" />
     <ClInclude Include="widgets\widgets.h" />
