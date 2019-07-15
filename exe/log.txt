@@ -7,4 +7,3 @@ V8 version 7.5.288.23 [Javascript shell]
     shell.execfile('test-js/' + name)
 }
 [object Object]
-C:/Users/leon/source/repos/matlab/exe/bar.png,C:/Users/leon/source/repos/matlab/exe/foo.png,C:/Users/leon/source/repos/matlab/exe/output.tif
