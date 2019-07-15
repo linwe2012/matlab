@@ -12,13 +12,12 @@
 #include "colorpicker.h"
 using namespace v8;
 
-
+struct GuiModule;
 
 void ReigsterGui(V8Shell* shell);
 
-
 QWidget* target_widgets;
-
+static GuiModule* global;
 
 // NOTE: This does not cover all cases - it should be easy to add new ones as required.
 inline QImage  cvMatToQImage(const cv::Mat& inMat)
@@ -204,6 +203,8 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	target_widgets->setObjectName(QString::fromUtf8("toolbar"));
 	main->setCentralWidget(target_widgets);
 	// QMetaObject::connectSlotsByName(main);
+
+    global = gui.unwrap_object(shell->GetIsolate(), mod);
 }
 
 QWidget* GetTargetWidget()
@@ -215,6 +216,11 @@ QSize current_layout(0, 0);
 QSize& GetCurrentLayout()
 {
 	return current_layout;
+}
+
+QGraphicsView* GetImageView() 
+{
+  return global->image_view;
 }
 
 
