@@ -4,3 +4,4 @@
 
 QWidget* GetTargetWidget();
 QSize& GetCurrentLayout();
+QGraphicsView* GetImageView();
