@@ -12,6 +12,10 @@ public:
 public:
   std::string text_;
   Local<Function> onslide_;
+  Local<Function> onrelease_;
+  Local<Function> onpress_;
+  bool mouse_down_ = false;
+
   Local<Object> js_self_;
 
   Slider(const FunctionCallbackInfo<Value>& args);
@@ -23,12 +27,20 @@ public:
 	  return  { this, spinbox_ };
   }
 
+  void SetValue(int i) {
+	  this->setValue(i);
+  }
+
   static void Init(Local<Object> mod, V8Shell* shell);
 
   Q_OBJECT
+	
+  
 
 private slots:
   void SlideCallback();
+  void Release();
+  void Press();
 
 private:
   Isolate* isolate_;

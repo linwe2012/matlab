@@ -25,5 +25,7 @@
         <file alias="gray">Resources/icons/edit/icons8-grayscale-50.png</file>
         <file alias="redo">Resources/icons/edit/icons8-redo-64.png</file>
         <file alias="undo">Resources/icons/edit/icons8-undo-64.png</file>
+        <file alias="face">Resources/icons/edit/icons8-face-id-48.png</file>
+        <file alias="histogram">Resources/icons/edit/icons8-normal-distribution-histogram-40.png</file>
     </qresource>
 </RCC>

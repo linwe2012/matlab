@@ -36,6 +36,11 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("linear", &Matrix::v8_linear)
 		.set("face", &Matrix::v8_face)
 		.set("clone", &Matrix::v8_clone)
+		.set("getColor", &Matrix::v8_clone)
+		.set("setColor", &Matrix::v8_clone)
+		.set("getRows", &Matrix::v8_clone)
+		.set("getCols", &Matrix::v8_clone)
+		.set("fill", &Matrix::fill)
 		;
 
 	shell->RegisterClasses(
@@ -164,25 +169,59 @@ void Matrix::v8_face(const v8::FunctionCallbackInfo<v8::Value>& args)
 void Matrix::v8_clone(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
 	Isolate* isolate = args.GetIsolate();
+	auto obj = (*gMatrixClass).create_object(
+		isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone(),
+		shell_
+	);
+	Local<Array> keys = args.This()->GetOwnPropertyNames(isolate->GetCurrentContext()).ToLocalChecked();
+	int len = keys->Length();
+	for (int i = 0; i < len; ++i) {
+
+		auto key = v8pp::from_v8<Local<String>>(isolate, keys->Get(i));
+		auto value = obj->Get(isolate->GetCurrentContext(), keys->Get(i));
+
+		obj->Set(
+			isolate->GetCurrentContext(),
+			keys->Get(i),
+			args.This()->Get(isolate->GetCurrentContext(), keys->Get(i)).ToLocalChecked()
+		);
+	}
 	args.GetReturnValue().Set(
-		(*gMatrixClass).create_object(
-			isolate, (*gMatrixClass).unwrap_object(args.GetIsolate(), args.This())->matrix.clone(),
-			shell_
-		)
+		obj
 	);
 }
 
+cv::Vec3b Matrix::v8_getColor(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	int row = v8pp::from_v8<int>(args.GetIsolate(), args[0], INT_MAX);
+	int col = v8pp::from_v8<int>(args.GetIsolate(), args[1], INT_MAX);
+
+	return getColor(row, col);
+}
+
+int Matrix::v8_getRows(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	return getRows();
+	return_this(args);
+}
+
+int Matrix::v8_getCols(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	return getCols();
+	return_this(args);
+}
+
+void Matrix::fill(std::vector<std::vector<float>> mat)
+{
+	matrix = cv::Mat(mat.size(), mat[0].size(), CV_32FC1);
+
+	for (int i = 0; i < matrix.rows; ++i)
+		for (int j = 0; j < matrix.cols; ++j)
+			matrix.at<float>(i, j) = mat.at(i).at(j);
+}
 
 void Matrix::resize(const std::vector<int>& dims)
 {
-	/*
-	std::cerr << "resize called: [";
-	for (auto d : dims) {
-		std::cout << d << ", ";
-	}
-	std::cout << "]" << std::endl;
-	*/
-
 	cv::Mat temp = matrix.clone();
 	cv::resize(temp, matrix, cv::Size(temp.cols * dims.at(0), temp.rows * dims.at(1)), 0, 0, cv::INTER_LINEAR);
 }
@@ -263,17 +302,23 @@ void Matrix::rotate(const double degree)
 }
 
 void Matrix::togray()
-{
-	cv::Mat temp = matrix.clone();
-	cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
-	std::cout << "Done: convert to gray picture." << std::endl;
+{	
+	if (matrix.type() == CV_8UC3) {
+		cv::Mat temp = matrix.clone();
+		cv::cvtColor(temp, matrix, cv::COLOR_BGR2GRAY);
+		std::cout << "Done: convert to gray picture." << std::endl;
+	} else {
+		std::cout << "Err: the image is already a gray one." << std::endl;
+	}
 }
 
 void Matrix::tobin()
 {
-	togray();
+	if (matrix.type() != CV_8UC1) {
+		togray();
+	}
 	cv::Mat temp = matrix.clone();
-	cv::threshold(temp, matrix, 15, 100.0, 8);
+	cv::threshold(temp, matrix, 50, 150.0, 8);
 
 	std::cout << "Done: convert to binary picture." << std::endl;
 }
@@ -313,4 +358,36 @@ void Matrix::face()
 	for (auto it = faces.begin(); it != faces.end(); ++it) {
 		cv::rectangle(matrix, *it, cv::Scalar(0, 0, 255), 3, 4, 0);
 	}
+}
+
+void Matrix::conv(cv::Mat& ker)
+{
+	cv::Mat temp = matrix.clone();
+	cv::filter2D(temp, matrix, -1, ker);
+}
+
+void Matrix::setColor(int x, int y, cv::Vec3b& color)
+{
+	matrix.at<cv::Vec3b>(x, y)[0] = color[0]; // B
+	matrix.at<cv::Vec3b>(x, y)[1] = color[1]; // G
+	matrix.at<cv::Vec3b>(x, y)[2] = color[2]; // R
+}
+
+cv::Vec3b Matrix::getColor(int x, int y)
+{
+	cv::Vec3b color;
+	color[0] = matrix.at<cv::Vec3b>(x, y)[0]; // B
+	color[1] = matrix.at<cv::Vec3b>(x, y)[1]; // G
+	color[2] = matrix.at<cv::Vec3b>(x, y)[2]; // R
+	return color;
+}
+
+int Matrix::getRows()
+{
+	return matrix.cols;
+}
+
+int Matrix::getCols()
+{
+	return matrix.cols;
 }

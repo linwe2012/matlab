@@ -35,3 +35,4 @@ inline void ArgError(const FunctionCallbackInfo<Value>& args, const char* c) {
 		Exception::Error(MakeStr(isolate, c))
 		});
 }
+

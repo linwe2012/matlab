@@ -6,3 +6,4 @@ V8 version 7.5.288.23 [Javascript shell]
 
     shell.execfile('test-js/' + name)
 }
+[object Object]

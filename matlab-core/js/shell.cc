@@ -110,6 +110,11 @@ struct V8Shell::Data {
 		}
 		(*output) << std::endl;
 	}
+	std::string ReplaceExtension(const char* c, const char* ext) {
+		fs::path path(c);
+		path.replace_extension(ext);
+		return path.string();
+	}
 };
 std::map<Isolate*, V8Shell*> V8Shell::Data::shell_map;
 
@@ -221,6 +226,7 @@ void V8Shell::Data::RegisterShell()
 		.set("popCwd", &V8Shell::Data::PopCwd)
 		.set("getDir", &V8Shell::Data::GetDirectory)
 		.set("getExt", &V8Shell::Data::Extension)
+		.set("replaceExt", &V8Shell::Data::ReplaceExtension)
 		.set("print", &V8Shell::Data::Print)
 		;
 	auto shell = v8pp::class_<V8Shell::Data>::reference_external(isolate, this);
