@@ -46,20 +46,24 @@ bool DragTool::eventFilter(QObject* target, QEvent* event)
   if (this->isChecked()&&target== GetImageView())
   {
     js_self_ = v8pp::class_<DragTool>::find_object(isolate_, this);
-	
+    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    QPoint pos = mouseEvent->pos();
+    Local<Integer> arg1 = Integer::New(isolate_, pos.x());
+    Local<Integer> arg2 = Integer::New(isolate_, pos.y());
+    Local<Value> argv[] = { arg1, arg2 };
     switch (event->type()) 
     {
     case QEvent::MouseButtonPress:
       onpress_ = Local<Function>::Cast(js_self_->Get(MakeStr(isolate_, "onpress_func")));
-      onpress_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 0, nullptr);
+      onpress_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 2, argv);
       break;
     case QEvent::MouseButtonRelease:
       onrelease_ = Local<Function>::Cast(js_self_->Get(MakeStr(isolate_, "onrelease_func")));
-      onrelease_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 0, nullptr);
+      onrelease_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 2, argv);
       break;
     case QEvent::MouseMove:
       onmove_ = Local<Function>::Cast(js_self_->Get(MakeStr(isolate_, "onmove_func")));
-      onmove_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 0, nullptr);
+      onmove_->CallAsFunction(isolate_->GetCurrentContext(), js_self_, 2, argv);
       break;
     default:
       break;
