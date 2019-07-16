@@ -5,3 +5,5 @@
 QWidget* GetTargetWidget();
 QSize& GetCurrentLayout();
 QGraphicsView* GetImageView();
+QPixmap* GetPixelMap();
+void ReRenderPixelMap();

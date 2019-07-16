@@ -9,8 +9,7 @@ using namespace v8;
 class Matrix {
 public:
 	Matrix() {}
-
-
+	
 	Matrix(cv::Mat m, V8Shell* shell)
 		:matrix(m), shell_(shell)
 	{}
@@ -45,6 +44,8 @@ public:
 	void linear(double alpha, int beta);
 	void face();
 	void divScale(double);
+
+	void acceptMatrix(Matrix*);
 
 	void conv(cv::Mat& ker); /*example:
 							 * cv::Mat kernel = (cv::Mat_<char>(3, 3) << 0, -1, 0,

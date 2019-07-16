@@ -6,29 +6,112 @@ V8 version 7.5.288.23 [Javascript shell]
 
     shell.execfile('test-js/' + name)
 }
-[object Object]
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-FilterImage("blur")
-RotateCallback(-23, true)
+ToGray()
+Equalize()
+FilterImage("sharpen")
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+/*unable to record in script.*/)
+false
+i=17
+[undo] painter
+true
+false
+i=16
+[undo] painter
+true
+false
+i=15
+[undo] painter
+true
+false
+i=14
+[undo] painter
+true
+false
+i=13
+[undo] painter
+true
+false
+i=12
+[undo] painter
+true
+false
+i=11
+[undo] painter
+true
+false
+i=10
+[undo] painter
+true
+false
+i=9
+[undo] painter
+true
+false
+i=8
+[undo] painter
+true
+false
+i=7
+[undo] painter
+true
+false
+i=6
+[undo] painter
+true
+false
+i=5
+[undo] painter
+true
+false
+i=4
+[undo] painter
+true
+false
+i=8
+[undo] painter
+true
+false
+i=7
+[undo] painter
+true
+false
+i=14
+[undo] painter
+true
+false
+i=13
+[undo] painter
+true
+false
+i=12
+[undo] painter
+true
+false
+i=11
+[undo] painter
+true
+false
+i=10
+[undo] painter
+true
+false
+i=9
+[undo] painter
+true
+false
+i=8
+[undo] painter
+true

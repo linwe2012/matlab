@@ -41,6 +41,9 @@
     <ClCompile Include="widgets\object-viewer.cc">
       <Filter>Source Files\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\painter-tools.cc">
+      <Filter>Source Files\widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -108,6 +111,9 @@
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\textedit.h">
+      <Filter>Source Files\widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\painter-tools.h">
       <Filter>Source Files\widgets</Filter>
     </QtMoc>
   </ItemGroup>

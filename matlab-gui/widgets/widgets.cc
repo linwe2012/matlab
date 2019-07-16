@@ -13,6 +13,7 @@
 #include "checkbox.h"
 #include "dragtool.h"
 #include "textedit.h"
+#include "painter-tools.h"
 
 using namespace v8;
 
@@ -97,7 +98,8 @@ struct GuiModule {
 		v8pp::class_<Matrix>::unwrap_object(args.GetIsolate(), args[0]);
 
 		auto& img = mat->matrix;
-		image_scene->addPixmap(QPixmap::fromImage(cvMatToQImage(img)));
+		pixel_map_ = QPixmap::fromImage(cvMatToQImage(img));
+		image_scene->addPixmap(pixel_map_);
 		image_view->setScene(image_scene);
 		image_view->setParent(target_widgets);
 		image_view->setGeometry(QRect(20, 120, 800, 800));
@@ -175,8 +177,18 @@ struct GuiModule {
 	QGraphicsView* image_view;
 	QGraphicsScene* image_scene;
 	Local<Object> js_self_;
+	QPixmap pixel_map_;
 };
 
+QPixmap* GetPixelMap() {
+	return &global->pixel_map_;
+}
+
+void ReRenderPixelMap() {
+	global->image_scene->clear();
+	
+	global->image_scene->addPixmap(*GetPixelMap());
+}
   
 
 void ReigsterGui(V8Shell* shell, QMainWindow* main)
@@ -204,7 +216,7 @@ void ReigsterGui(V8Shell* shell, QMainWindow* main)
 	Button::Init(mod, shell);
 	JSObjVeiwer::Init(mod, shell);
 	CheckBox::Init(mod, shell);
-	DragTool::Init(mod, shell);
+	PainterTool::Init(mod, shell);
 	TextEdit::Init(mod, shell);
 
 	GuiModule& pmod = *gui.unwrap_object(shell->GetIsolate(), mod);

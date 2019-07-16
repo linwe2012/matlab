@@ -14,6 +14,8 @@ DragTool::DragTool(const FunctionCallbackInfo<Value>& args)
   GET(Local<Function>, onrelease);
   GET_IF(std::string, icon, "");
 
+  
+
   if (!icon.empty()) {
     this->setIcon(QIcon(icon.c_str()));
   }

@@ -98,3 +98,4 @@ gui.ribbon.add(btn_blur, 'Edit', 'Enhance')
 gui.ribbon.add(btn_sharpen, 'Edit', 'Enhance')
 gui.ribbon.add(btn_detectEdge, 'Edit', 'Tools')
 gui.ribbon.add(btn_boxBlur, 'Edit', 'Tools')
+

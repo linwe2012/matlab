@@ -43,6 +43,7 @@ void DefineJSMatrix(V8Shell* shell) {
 		.set("fill", &Matrix::fill)
 		.set("conv", &Matrix::v8_conv)
 		.set("divScale", &Matrix::divScale)
+		.set("acceptMatrix", &Matrix::acceptMatrix)
 		;
 
 	shell->RegisterClasses(
@@ -373,6 +374,11 @@ void Matrix::face()
 void Matrix::divScale(double i)
 {
 	cv::divide(i, matrix, matrix);
+}
+
+void Matrix::acceptMatrix(Matrix* m)
+{
+	matrix = m->matrix;
 }
 
 void Matrix::conv(cv::Mat& ker)

@@ -96,7 +96,7 @@ public:
 				String::Utf8Value utf8(isolate, key_str_maybe.ToLocalChecked());
 				current = new QStandardItem(*utf8);
 
-				MaybeLocal value_maybe = v->Get(context, key);
+				MaybeLocal<Value> value_maybe = v->Get(context, key);
 				if (value_maybe.IsEmpty()) {
 					SetRight("<unkown>");
 				}

@@ -351,7 +351,7 @@ function RotateCallback(degree, make_record) {
                 redo: degree,
                 undo: ans.data_rotate
             }
-        }, 'RotateCallback(' + degree +  ', true)')
+        }, 'RotateCallback(' + degree +  ', false)')
     }
     
     var delta = degree - ans.data_rotate;
@@ -376,14 +376,16 @@ sld_rotate = new gui.Slider({
     },
     onrelease() {
         if(!CheckAns()) return;
-        internal.add_cmd({
-            data: {
-                redo: ans.data_rotate,
-                undo: ans.data_begin_rotate
-            },
-            redo(){RotateCallback(this.data.redo, true); sld_rotate.setValue(this.data.redo)},
-            undo(){RotateCallback(this.data.undo, true); sld_rotate.setValue(this.data.undo); shell.print('[undo]', this.data.undo)}
-        }, 'RotateCallback(' + ans.data_rotate + ', true)')
+        if(internal.enable_cmd_stk) {
+            internal.add_cmd({
+                data: {
+                    redo: ans.data_rotate,
+                    undo: ans.data_begin_rotate
+                },
+                redo(){RotateCallback(this.data.redo, true); sld_rotate.setValue(this.data.redo)},
+                undo(){RotateCallback(this.data.undo, true); sld_rotate.setValue(this.data.undo); shell.print('[undo]', this.data.undo)}
+            }, 'RotateCallback(' + ans.data_rotate + ', true)')
+        }
     }
 })
 
@@ -406,8 +408,29 @@ ckbx_setting_rec_script = new gui.Checkbox({
 })
 
 
+painter = new gui.PainterTool({
+    onrelease(mat){
+        
+        var obj = {
+            data: {
+                undo: ans.clone()
+            },
+            undo(){ans = this.data.undo.clone(); RefreshImg(ans); shell.print('[undo] painter')}
+        }
+        
 
+        ans.acceptMatrix(mat);
+        if(internal.enable_cmd_stk) {
+            obj['data']['redo'] = ans.clone();
+            obj['redo'] = function(){
+                ans = this.data.redo.clone();
+                RefreshImg(ans);
+            }
+            internal.add_cmd(obj, '/*unable to record in script.*/)')
+        }
 
+    }
+})
 // gui.ribbon.add(target button, Tab name, group name)
 
 gui.ribbon.add(btn_read, 'Project', 'Files');
@@ -445,4 +468,4 @@ gui.Inspector.addWild(new gui.TextEdit({
 
 gui.Inspector.ribbon.add(btn_refresh_obj, 'Inspector', 'Refresh All')
 eval(shell.readtxt('test-js/extensions/filters.js'))
-eval(shell.readtxt('test-js/extensions/painter.js'))
+// eval(shell.readtxt('test-js/extensions/painter.js'))
