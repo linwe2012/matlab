@@ -1,4 +1,4 @@
-# Matlab + PS ViewModel 分报告
+# Photolab ViewModel 分报告
 
 ### 1.1 分工任务
 
@@ -19,6 +19,7 @@
 8. 将Model层的功能和View层绑定
 9. 实现撤回、重做、脚本数据与批处理功能
 10. 开发painter 功能
+11. 参与matlab core 工程unit test
 
 
 
@@ -126,6 +127,12 @@ Dev Tools 分为两部分，一部分是console，就是命令行界面，用户
 
 
 上图是我们的DevTools，可以观察所有变量以及再Shell里输入对应的命令。
+
+
+
+
+
+
 
 
 
