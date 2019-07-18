@@ -3,7 +3,7 @@
 | name   | id         | personal document          |
 | ------ | ---------- | -------------------------- |
 | 毛文涵 |            |                            |
-| 康嘉成 |            |                            |
+| 康嘉成 | 3170101220 | [personal report](kjc.md)  |
 | 林昭炜 | 3170105728 | [personal report](leon.md) |
 
 [TOC]
