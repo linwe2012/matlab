@@ -1,4 +1,4 @@
-# matlab
+# MiniPS
 
 
 
